@@ -115,7 +115,7 @@ export default function Navbar({
                       <li className="dropdown-header">Collections</li>
                       {searchResult.collections.map((collection) => (
                         <li key={collection.id} className="dropdown-item text-wrap text-break">
-                          <a href={`/collection?id=${collection.id}`}>{collection.name}</a> -
+                          <a href={`/collections/collection?id=${collection.id}`}>{collection.name}</a> -
                           <a href={`/page?category=${collection.category}`}>{collection.category}</a>
                         </li>
                       ))}

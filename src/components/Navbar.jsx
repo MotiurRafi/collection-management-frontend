@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 export default function Navbar({
   color_theme_toggle,
@@ -11,13 +12,19 @@ export default function Navbar({
   searchValue,
   searchResult,
 }) {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+
+  const toggleLanguage = () => {
+    const newLanguage = i18n.language === 'en' ? 'bn' : 'en';
+    i18n.changeLanguage(newLanguage);
+  };
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
     navigate("/register");
-    setUserData(null)
-    console.log(userData)
+    setUserData(null);
+    console.log(userData);
   };
 
   return (
@@ -25,7 +32,7 @@ export default function Navbar({
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <a className="navbar-brand" href="/">
-            CM
+            {t('CM')}
           </a>
           <button
             className="navbar-toggler"
@@ -42,62 +49,26 @@ export default function Navbar({
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/">
-                  Home
+                  {t('Home')}
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/collections">
-                  Collections
+                  {t('Collections')}
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link active" aria-current="page" href="/items">
-                  Items
-                </a>
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Dropdown
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item text-wrap text-break" href="#">
-                      Action
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item text-wrap text-break" href="#">
-                      Another action
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item text-wrap text-break" href="#">
-                      Something else here
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link disabled" aria-disabled="true">
-                  Disabled
+                  {t('Items')}
                 </a>
               </li>
             </ul>
             <form className="d-flex" role="search" style={{ position: "relative" }} >
               <input
-                className="form-control me-2" type="search" placeholder="Search" aria-label="Search" value={searchValue}
+                className="form-control me-2" type="search" placeholder={t('Search')} aria-label="Search" value={searchValue}
                 onChange={(e) => {
                   e.preventDefault();
-                  setSearchValue(e.target.value)
+                  setSearchValue(e.target.value);
                   handleSearch(e.target.value);
                 }}
               />
@@ -112,7 +83,7 @@ export default function Navbar({
                 >
                   {searchResult.collections && searchResult.collections.length > 0 && (
                     <>
-                      <li className="dropdown-header">Collections</li>
+                      <li className="dropdown-header">{t('Collections')}</li>
                       {searchResult.collections.map((collection) => (
                         <li key={collection.id} className="dropdown-item text-wrap text-break">
                           <a href={`/collections/collection?id=${collection.id}`}>{collection.name}</a> -
@@ -124,7 +95,7 @@ export default function Navbar({
 
                   {searchResult.items && searchResult.items.length > 0 && (
                     <>
-                      <li className="dropdown-header">Items</li>
+                      <li className="dropdown-header">{t('Items')}</li>
                       {searchResult.items.map((item) => (
                         <li key={item.id} className="dropdown-item text-wrap text-break">
                           <a href={`/item?id=${item.id}`}>{item.name} {item.string_field1_value ? ` - ${item.string_field1_value}` : ''}</a>
@@ -134,7 +105,7 @@ export default function Navbar({
                   )}
                   {searchResult.tags && searchResult.tags.length > 0 && (
                     <>
-                      <li className="dropdown-header">Tags</li>
+                      <li className="dropdown-header">{t('Tags')}</li>
                       {searchResult.tags.map((tag) => (
                         <li key={tag.id} className="dropdown-item text-wrap text-break">
                           <a href={`/page?tag=${tag.name}`}>{tag.name} {tag.itemCount ? ` - ( ${tag.itemCount} Item )` : ""}</a>
@@ -145,7 +116,7 @@ export default function Navbar({
                   {searchResult.comments &&
                     searchResult.comments.length > 0 && (
                       <>
-                        <li className="dropdown-header">Comments</li>
+                        <li className="dropdown-header">{t('Comments')}</li>
                         {searchResult.comments.map((comment) => (
                           <li key={comment.id} className="dropdown-item text-wrap text-break">
                             <a href={`/items/item?id=${comment.itemId}`}>
@@ -173,6 +144,9 @@ export default function Navbar({
                 }
               ></i>
             </button>
+            <button class="btn btn-primary mx-4" role="button" data-bs-toggle="button" onClick={toggleLanguage}>
+              {i18n.language === 'en' ? 'বাংলা' : 'English'}
+            </button>
 
             {userData ? (
               <div className="dropdown">
@@ -192,8 +166,8 @@ export default function Navbar({
                   </li>
                   {userData.role === "admin" ? (
                     <li>
-                      <a className="dropdown-item text-wrap text-break" href="/dashboard/admin">
-                        Admin Dashboard
+                      <a className={`dropdown-item text-wrap text-break ${userData.status === 'blocked' ? 'disabled' : ''}`} href="/dashboard/admin">
+                        {t('Admin Dashboard')}
                         {userData.status === "blocked" ? (
                           <i className="fa-solid fa-lock px-2 text-danger"></i>
                         ) : (
@@ -211,7 +185,7 @@ export default function Navbar({
                         handleLogOut();
                       }}
                     >
-                      LogOut
+                      {t('LogOut')}
                     </button>
                   </li>
                 </ul>
@@ -222,7 +196,7 @@ export default function Navbar({
                 href="/register"
                 className="btn btn-outline-secondary"
               >
-                Sign In
+                {t('Sign In')}
               </a>
             )}
           </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { getItem, toggleLike } from "../api";
+import { getItem, toggleLike, addComment, deleteComment } from "../api";
 import debounce from "lodash.debounce";
 import { format } from "date-fns";
 import ItemUpdateModal from "./ItemUpdateModal";
@@ -91,11 +91,36 @@ export default function Item({
     }
   };
 
+  const createComment = async (e) => {
+    e.preventDefault();
+    const text = e.target.comment.value;
+    if (!text) return;
+    try {
+      const response = await addComment(text, item.id);
+      console.log(response.data);
+      fetchItem(id)
+    } catch (error) {
+      console.log('Error adding comment', error);
+    }
+  };
+
+  const removeComment = async (id) => {
+    try {
+      const response = await deleteComment(id)
+      console.log(response.data)
+      fetchItem(item.id)
+    } catch (error) {
+      console.log('error removing comment', error)
+    }
+  }
+
   if (!item) return null;
 
   return (
     <div>
-      <ItemUpdateModal item={item} urlId={id} fetchItem={fetchItem} />
+      {userData && (userData.status === 'active') && (userData.id === item.Collection.userId || userData.role === 'admin') ? (
+        <ItemUpdateModal item={item} urlId={id} fetchItem={fetchItem} />
+      ) : ('')}
       <Navbar
         color_theme_toggle={color_theme_toggle}
         colorThemeState={colorThemeState}
@@ -106,10 +131,12 @@ export default function Item({
         handleSearch={handleSearch}
         searchResult={searchResult}
       />
-      <div className="container-md position-relative" style={{ minHeight: "80vh" }}>
-        <button className="btn position-absolute btn-outline-secondary top-0 end-0 mx-2 mt-2" data-bs-toggle="modal" data-bs-target="#updateitemmodal">
-          <i className="fa-regular fa-pen-to-square"></i>
-        </button>
+      <div className="container-md  position-relative" style={{ minHeight: "100vh" }}>
+        {userData && (userData.status === 'active') && (userData.id === item.Collection.userId || userData.role === 'admin') ? (
+          <button className="btn position-absolute btn-outline-secondary top-0 end-0 mx-2 mt-2" data-bs-toggle="modal" data-bs-target="#updateitemmodal">
+            <i className="fa-regular fa-pen-to-square"></i>
+          </button>
+        ) : ('')}
         <div className="row m-lg-5 my-md-4 px-lg-5 d-flex flex-wrap-reverse">
           <div className="mt-4 position-relative">
             <form className="d-flex flex-column justify-content-center align-items-center position-absolute top-0 end-0">
@@ -137,9 +164,19 @@ export default function Item({
         </div>
         <div className="my-5 m-lg-5 my-md-4 my-sm-4 px-lg-5">
           <h3>Comments:</h3>
-          <ul>
+          <form onSubmit={createComment}>
+            <div className="mb-3">
+              <label htmlFor="comment" className="form-label">Add a Comment</label>
+              <input type="text" className="form-control" id="comment" aria-describedby="comment" />
+            </div>
+            <button type="submit" className=" mb-3 btn btn-primary">Add Comment</button>
+          </form>
+          <ul className="d-flex flex-column flex-coloumn gap-1">
             {item.Comments?.map((comment, index) => (
-              <li key={index}>{comment.text}</li>
+              <li className="d-flex flex-coloumn mb-3" key={index}>
+                {comment.text}
+                <button className=" mx-4 btn btn-danger" onClick={() => removeComment(comment.id)}>Remove</button>
+                </li>
             ))}
           </ul>
         </div>

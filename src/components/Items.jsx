@@ -4,12 +4,14 @@ import ItemCard from './ItemCard';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { getAllItems } from '../api';
+import { useTranslation } from 'react-i18next';
 
 export default function Items({ userData, setUserData, color_theme_toggle, colorThemeState, handleSearch, searchValue, setSearchValue, searchResult }) {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const limit = 9;
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchInitialItems();
@@ -56,9 +58,9 @@ export default function Items({ userData, setUserData, color_theme_toggle, color
         searchResult={searchResult}
       />
       <section className="bg-body-secondary">
-        <div className="container py-5">
+        <div className="container py-5" style={{minHeight: "100vh"}}>
           <h4 className="mb-5">
-            <strong>Items</strong>
+            <strong>{t('Items')}</strong>
           </h4>
 
           <InfiniteScroll
@@ -66,7 +68,7 @@ export default function Items({ userData, setUserData, color_theme_toggle, color
             next={fetchMoreItems}
             hasMore={hasMore}
             loader={<h4>. . .</h4>}
-            endMessage={<p>No more items to load</p>}
+            endMessage={<p>{t('No more items to load')}</p>}
             style={{ overflowX: 'hidden', textAlign: "center" }}
           >
             <div className="row">

@@ -5,12 +5,14 @@ import CollectionCard from "./CollectionCard";
 import { getAllCollections } from "../api";
 import InfiniteScroll from "react-infinite-scroll-component";
 import debounce from "lodash.debounce";
+import { useTranslation } from 'react-i18next';
 
 export default function Collections({ userData, setUserData, color_theme_toggle, colorThemeState, handleSearch, searchValue, setSearchValue, searchResult }) {
   const [collections, setCollections] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const limit = 3;
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchMoreCollections();
@@ -46,9 +48,9 @@ export default function Collections({ userData, setUserData, color_theme_toggle,
         searchResult={searchResult}
       />
       <section className="bg-body-secondary">
-        <div className="container py-5">
+        <div className="container py-5" style={{minHeight: "100vh"}}>
           <h4 className="mb-5">
-            <strong>Collections</strong>
+            <strong>{t('Collections')}</strong>
           </h4>
 
           <InfiniteScroll

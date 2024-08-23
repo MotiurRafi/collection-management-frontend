@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { createCollection } from '../api';
+import { useTranslation } from 'react-i18next';
 
 export default function CollectionModal({ userId }) {
+    const { t } = useTranslation();
+
     const [image, setImage] = useState(null);
     const [collectionData, setCollectionData] = useState({
         name: '',
@@ -146,7 +149,7 @@ export default function CollectionModal({ userId }) {
                         <form onSubmit={handleCreateCollection}>
                             <div className="form-outline mb-4">
                                 <input type="text" id="name" name='name' className="form-control" onChange={handleChange} />
-                                <label className="form-label" htmlFor="name">Name<span className="text-danger">*</span></label>
+                                <label className="form-label" htmlFor="name">{t('Name')}<span className="text-danger">*</span></label>
                             </div>
                             <div className="form-outline mb-4">
                                 <textarea className="form-control" id="description" name='description' rows="4" onChange={handleChange}></textarea>
@@ -201,7 +204,7 @@ export default function CollectionModal({ userId }) {
 
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" className="btn btn-primary">Create Collection</button>
+                                <button type="submit" className="btn btn-primary">Create</button>
                             </div>
                         </form>
                     </div>

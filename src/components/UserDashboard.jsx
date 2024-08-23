@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import CollectionCard from "./CollectionCard";
 import CollectionModal from "./CollectionModal";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useTranslation } from 'react-i18next';
 
 export default function UserDashboard({
   userData,
@@ -26,6 +27,7 @@ export default function UserDashboard({
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const limit = 4;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (id) {
@@ -69,7 +71,7 @@ export default function UserDashboard({
 
   return (
     <div>
-      {userData && (userData.id == id || userData.role === 'admin') ?
+      {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?
         (<CollectionModal userId={id} />):
         ''
       }
@@ -110,7 +112,7 @@ export default function UserDashboard({
                           {collections.length < 10
                             ? "0" + collections.length
                             : collections.length}{" "}
-                          - Collections
+                          - {t('Collections')}
                         </button>
                       </div>
                     </div>
@@ -119,7 +121,7 @@ export default function UserDashboard({
                     <div className="card-body">
                       <div className="row">
                         <div className="col-sm-3">
-                          <p className="mb-0 text-capitalize">Full Name</p>
+                          <p className="mb-0 text-capitalize">{t('Full Name')}</p>
                         </div>
                         <div className="col-sm-9">
                           <p className="text-muted mb-0">{user.username}</p>
@@ -128,7 +130,7 @@ export default function UserDashboard({
                       <hr />
                       <div className="row">
                         <div className="col-sm-3">
-                          <p className="mb-0">Email</p>
+                          <p className="mb-0">{t('Email')}</p>
                         </div>
                         <div className="col-sm-9">
                           <p className="text-muted mb-0">{user.email}</p>
@@ -141,8 +143,8 @@ export default function UserDashboard({
                 <div className="col-lg-8">
                   <div className="row">
                     <div className="col  bg-body-tertiary rounded-3 p-3 mb-4 d-flex justify-content-between align-items-center mx-3">
-                      <p className="m-0">Collections</p>
-                      {userData && (userData.id == id || userData.role === 'admin' ) ?
+                      <p className="m-0">{t('Collections')}</p>
+                      {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin' ) ?
                       (<i className="fa-solid fa-plus rounded bg-primary-subtle p-2 btn " data-bs-toggle="modal" data-bs-target="#exampleModal"></i>):
                       ''
                       }
@@ -153,7 +155,7 @@ export default function UserDashboard({
                     next={fetchMoreCollections}
                     hasMore={hasMore}
                     loader={<h4>. . .</h4>}
-                    endMessage={<p>No more collections to show.</p>}
+                    endMessage={<p>{t('No more collections to show')}.</p>}
                     style={{ overflowX: 'hidden', textAlign: "center" }}
                   >
                     <div className="row">

@@ -9,6 +9,7 @@ import ItemCard from "./ItemCard";
 import ItemModal from './ItemModal'
 import { formatDistanceToNow } from "date-fns";
 import CollectionUpdateModal from "./CollectionUpdateModal";
+import { useTranslation } from 'react-i18next';
 
 export default function Collection({
   userData,
@@ -20,6 +21,7 @@ export default function Collection({
   setSearchValue,
   searchResult,
 }) {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
   const [collection, setCollection] = useState(null);
@@ -94,16 +96,22 @@ export default function Collection({
         searchResult={searchResult}
       />
       {collection && (
-        <div className="pb-5">
-          <ItemModal collection={collection} fetchCollection={fetchCollection} urlId={id}/>
-          <CollectionUpdateModal collection={collection} fetchCollection={fetchCollection} urlId={id}/>
+        <div className="pb-5" style={{minHeight: "100vh"}}>
+          {userData && (userData.status === 'active') && (userData.id === collection.userId || userData.role === 'admin') ? (
+            <>
+              <ItemModal collection={collection} fetchCollection={fetchCollection} urlId={id} />
+              <CollectionUpdateModal collection={collection} fetchCollection={fetchCollection} urlId={id} />
+            </>
+          ) : ('')}
           <div className="card text-bg-dark rounded-0 position-relative" style={{ minHeight: '50vh' }}>
             {collection.image && <img src={collection.image} style={{ maxHeight: "90vh" }} className="card-image" alt={collection.name} />}
             <div
               className="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center"
               style={{ height: "100%", background: 'rgba(0,0,0,.7)' }}
             >
-              <button className="btn position-absolute btn-outline-light top-0 end-0 mx-2 mt-2" data-bs-toggle="modal" data-bs-target="#updatecollectionmodal"><i className="fa-regular fa-pen-to-square"></i></button>
+          {userData && (userData.status === 'active') && (userData.id === collection.userId || userData.role === 'admin') ? (
+                <button className="btn position-absolute btn-outline-light top-0 end-0 mx-2 mt-2" data-bs-toggle="modal" data-bs-target="#updatecollectionmodal"><i className="fa-regular fa-pen-to-square"></i></button>
+              ) : ('')}
               <h1 className="card-title">{collection.name}</h1>
               <p className="card-text">
                 {collection.description}
@@ -125,8 +133,11 @@ export default function Collection({
           </div>
           <div className="container mt-5">
             <div className="bg-body-tertiary rounded-3 p-3 mb-4 d-flex justify-content-between align-items-center">
-              <p className="m-0">Items</p>
-              <i className="fa-solid fa-plus rounded bg-primary-subtle p-2 btn " data-bs-toggle="modal" data-bs-target="#createitemmodal"></i>
+              <p className="m-0">{t('Items')}</p>
+              {userData && (userData.status === 'active') && (userData.id === collection.userId || userData.role === 'admin') ? (
+                <i className="fa-solid fa-plus rounded bg-primary-subtle p-2 btn " data-bs-toggle="modal" data-bs-target="#createitemmodal"></i>
+              ) : ('')
+              }
             </div>
           </div>
 

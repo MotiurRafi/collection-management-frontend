@@ -1,14 +1,17 @@
 import React from "react";
 import CollectionCard from "./CollectionCard";
+import { useTranslation } from 'react-i18next';
 
 export default function Home_collections({ largestCollections }) {
+  const { t } = useTranslation();
+
   return (
     <div>
       {largestCollections && largestCollections.length > 0 && (
         <section className="bg-body-secondary">
           <div className="container py-5">
             <h4 className="mb-5">
-              <strong>Largest Collections</strong>
+              <strong>{t('Largest Collections')}</strong>
             </h4>
             <div className="row">
               {largestCollections.map((collection) => (

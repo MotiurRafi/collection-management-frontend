@@ -1,13 +1,17 @@
 import React from "react";
 import ItemCard from "./ItemCard";
+import { useTranslation } from 'react-i18next';
+
 export default function HomeItems({ latestItems }) {
+  const { t } = useTranslation();
+
   return (
     <div>
       {latestItems && latestItems.length > 0 ? (
         <section>
           <div className="text-left container py-5">
             <h4 className="mb-5">
-              <strong>Latest Items</strong>
+              <strong>{t('Latest Items')}</strong>
             </h4>
             <div className="row" >
               {latestItems.map((item) => (

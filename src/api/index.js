@@ -40,6 +40,9 @@ export const getUser = (id) => API.get(`/user/get-user/${id}`);
 
 export const toggleLike = (itemId) => API.post(`/like/toggle-like/${itemId}`);
 
+export const addComment = (text, itemId) => API.post(`/comment/add-comment/${itemId}`, { text });
+export const deleteComment = (id) => API.delete(`/comment/remove-comment/${id}`);
+
 export const searchAll = (query) => API.get(`/search`, { params: { query } });
 export const searchTag = (query) => API.get(`/tag/search-tag`, { params: { query } });
 export const searchUser = (query) => API.get(`/user/search-user`, { params: { query } });

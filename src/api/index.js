@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({
+  const API = axios.create({
     baseURL: 'https://collection-management-backend.onrender.com/api', 
     headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,

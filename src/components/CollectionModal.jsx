@@ -158,23 +158,43 @@ export default function CollectionModal({ userId }) {
                             <div className="form-outline mb-4">
                                 <label className="form-label">Category</label><br />
                                 <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryBooks" value="books" onChange={handleChange}/>
+                                    <input type="radio" className="form-check-input" name="category" id="categoryBooks" value="books" onChange={handleChange} />
                                     <label className="form-check-label" htmlFor="categoryBooks">Books</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryMusic" value="music" onChange={handleChange}/>
+                                    <input type="radio" className="form-check-input" name="category" id="categoryArtworks" value="artworks" onChange={handleChange} />
+                                    <label className="form-check-label" htmlFor="categoryArtworks">Artworks</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="categoryStamps" value="stamps" onChange={handleChange} />
+                                    <label className="form-check-label" htmlFor="categoryStamps">Stamps</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="categoryCoins" value="coins" onChange={handleChange} />
+                                    <label className="form-check-label" htmlFor="categoryCoins">Coins</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="categoryAntique" value="antique" onChange={handleChange} />
+                                    <label className="form-check-label" htmlFor="categoryFurniture">Antique</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="categoryComics" value="comics" onChange={handleChange} />
+                                    <label className="form-check-label" htmlFor="categoryComics">Comics</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="categoryMusic" value="music" onChange={handleChange} />
                                     <label className="form-check-label" htmlFor="categoryMusic">Music</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryTools" value="tools" onChange={handleChange}/>
+                                    <input type="radio" className="form-check-input" name="category" id="categoryTools" value="tools" onChange={handleChange} />
                                     <label className="form-check-label" htmlFor="categoryTools">Tools</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryWealth" value="wealth" onChange={handleChange}/>
+                                    <input type="radio" className="form-check-input" name="category" id="categoryWealth" value="wealth" onChange={handleChange} />
                                     <label className="form-check-label" htmlFor="categoryWealth">Wealth</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryOthers" value="others" onChange={handleChange}/>
+                                    <input type="radio" className="form-check-input" name="category" id="categoryOthers" value="others" onChange={handleChange} />
                                     <label className="form-check-label" htmlFor="categoryOthers">Others</label>
                                 </div>
                             </div>

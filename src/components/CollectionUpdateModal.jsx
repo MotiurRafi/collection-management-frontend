@@ -210,17 +210,46 @@ export default function CollectionUpdateModal({ collection, fetchCollection, url
                             <div className="form-outline mb-4">
                                 <label className="form-label">Category</label><br />
                                 <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category1" value="Books" checked={category === "Books"} onChange={(e) => setCategory(e.target.value)} />
+                                    <input type="radio" className="form-check-input" name="category" id="category1" value="books" checked={category === "books"} onChange={(e) => setCategory(e.target.value)} />
                                     <label className="form-check-label" htmlFor="category1">Books</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category2" value="Movies" checked={category === "Movies"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category2">Movies</label>
+                                    <input type="radio" className="form-check-input" name="category" id="category2" value="artworks" checked={category === "artworks"} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor="category2">Artworks</label>
+                                </div> 
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="category4" value="stamps" checked={category === "stamps"} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor="category4">Stamps</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category3" value="Games" checked={category === "Games"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category3">Games</label>
+                                    <input type="radio" className="form-check-input" name="category" id="category5" value="coins" checked={category === "coins"} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor="category5">Coins</label>
                                 </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="category5" value="antique" checked={category === "antique"} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor="category5">Antique</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="category9" value="comics" checked={category === "comics"} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor="category9">Comics</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="category9" value="music" checked={category === "music"} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor="category9">Music</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="category9" value="tools" checked={category === "tools"} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor="category9">Tools</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="category10" value="wealth" checked={category === "wealth"} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor="category10">Wealth</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input type="radio" className="form-check-input" name="category" id="category10" value="others" checked={category === "others"} onChange={(e) => setCategory(e.target.value)} />
+                                    <label className="form-check-label" htmlFor="category10">Others</label>
+                                </div>
+
                             </div>
 
                             <div className="form-outline mb-4">

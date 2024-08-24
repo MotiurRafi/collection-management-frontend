@@ -11,7 +11,7 @@ const APIformdata = axios.create({
     baseURL: 'https://collection-management-backend.onrender.com/api', 
     headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
     }
 });
 

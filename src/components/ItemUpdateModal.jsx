@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { updateItem, searchTag } from '../api'; // Ensure searchTag is imported
+import React, { useState, useEffect, useRef } from 'react';
+import { updateItem, searchTag } from '../api';
 
 export default function ItemUpdateModal({ item, urlId, fetchItem }) {
+  const closeButtonRef = useRef(null);
+  const [resLog, setResLog] = useState('')
   const [searchedTags, setSearchedTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [formData, setFormData] = useState({
@@ -71,8 +73,10 @@ export default function ItemUpdateModal({ item, urlId, fetchItem }) {
       });
       console.log("Item updated successfully:", response.data);
       fetchItem(urlId)
+      closeButtonRef.current.click();
     } catch (error) {
       console.error("Error updating item:", error);
+      setResLog('Updating item failed')
     }
   };
 
@@ -122,20 +126,20 @@ export default function ItemUpdateModal({ item, urlId, fetchItem }) {
 
   const handleTagSearch = async (query) => {
     if (query && query !== '') {
-        try {
-            const response = await searchTag(query);
-            setSearchedTags(response.data);
-        } catch (error) {
-            console.log('Error getting tag:', error);
-        }
+      try {
+        const response = await searchTag(query);
+        setSearchedTags(response.data);
+      } catch (error) {
+        console.log('Error getting tag:', error);
+      }
     } else {
-        setSearchedTags([]);
+      setSearchedTags([]);
     }
   };
 
   const handleTagClick = (tag) => {
     if (!selectedTags.some(selectedTag => selectedTag.name === tag.name)) {
-        setSelectedTags([...selectedTags, tag]);
+      setSelectedTags([...selectedTags, tag]);
     }
     setSearchedTags([]);
   };
@@ -222,8 +226,9 @@ export default function ItemUpdateModal({ item, urlId, fetchItem }) {
                   </span>
                 ))}
               </div>
-
+              <button type="button" className="btn btn-secondary mt-3 mx-1" data-bs-dismiss="modal" ref={closeButtonRef}>Close</button>
               <button type="submit" className="btn btn-primary mt-3">Update</button>
+              <small className='small text-danger'>{resLog}</small>
             </form>
           </div>
         </div>

@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { createCollection } from '../api';
 import { useTranslation } from 'react-i18next';
 
-export default function CollectionModal({ userId }) {
+export default function CollectionModal({ userId, fetchMoreCollections }) {
+    const closeButtonRef = useRef(null);
     const { t } = useTranslation();
-
+    const [resLog, setResLog] = useState('')
     const [image, setImage] = useState(null);
     const [collectionData, setCollectionData] = useState({
         name: '',
         description: '',
         category: '',
         fields: {
-            shortText: { sfn1: '', sfn2: '', sfn3: '' },
-            longText: { mlfn1: '', mlfn2: '', mlfn3: '' },
-            number: { ifn1: '', ifn2: '', ifn3: '' },
-            checkbox: { cfn1: '', cfn2: '', cfn3: '' },
-            date: { dfn1: '', dfn2: '', dfn3: '' }
+            shortText: {},
+            longText: {},
+            number: {},
+            checkbox: {},
+            date: {}
         }
     });
+    const uiCategories = ['books', 'artworks', 'stamps', 'coins', 'antique', 'comics', 'music', 'tools', 'wealth', 'others']
+
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
@@ -52,8 +55,9 @@ export default function CollectionModal({ userId }) {
     const addField = (type) => {
         const currentFields = collectionData.fields[type];
         const fieldCount = Object.keys(currentFields).length;
+
         if (fieldCount < 3) {
-            const newKey = `${type}${fieldCount + 1}`;
+            const newKey = `fn${fieldCount + 1}`;
             setCollectionData({
                 ...collectionData,
                 fields: {
@@ -67,6 +71,7 @@ export default function CollectionModal({ userId }) {
     const removeField = (type) => {
         const currentFields = collectionData.fields[type];
         const fieldKeys = Object.keys(currentFields);
+
         if (fieldKeys.length > 0) {
             const lastKey = fieldKeys[fieldKeys.length - 1];
             const { [lastKey]: _, ...remainingFields } = currentFields;
@@ -82,13 +87,24 @@ export default function CollectionModal({ userId }) {
 
     const prepareCustomFields = () => {
         const customFields = {};
+        const typePrefixMap = {
+            shortText: 'sfn',
+            longText: 'mlfn',
+            number: 'ifn',
+            checkbox: 'cfn',
+            date: 'dfn'
+        };
+
         Object.keys(collectionData.fields).forEach(type => {
-            Object.keys(collectionData.fields[type]).forEach(key => {
-                customFields[key] = collectionData.fields[type][key];
+            const prefix = typePrefixMap[type];
+            Object.keys(collectionData.fields[type]).forEach((key, index) => {
+                const fieldKey = `${prefix}${index + 1}`;
+                customFields[fieldKey] = collectionData.fields[type][key];
             });
         });
         return customFields;
     };
+
 
     const handleCreateCollection = async (e) => {
         e.preventDefault();
@@ -99,12 +115,19 @@ export default function CollectionModal({ userId }) {
         formData.append('category', collectionData.category);
         formData.append('image', image ? document.querySelector('#image').files[0] : '');
         formData.append('customFields', JSON.stringify(prepareCustomFields()));
+        console.log(prepareCustomFields())
 
         try {
             const response = await createCollection(userId, formData);
             console.log(response.data);
+            fetchMoreCollections(true);
+            if (closeButtonRef.current) {
+                closeButtonRef.current.click();
+            }
         } catch (error) {
             console.error("Error creating collection:", error);
+            setResLog('Collection creation unsuccessful')
+
         }
     };
 
@@ -137,6 +160,7 @@ export default function CollectionModal({ userId }) {
         </div>
     );
 
+
     return (
         <div className="modal fade" id="exampleModal" data-bs-backdrop="static" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered">
@@ -155,48 +179,24 @@ export default function CollectionModal({ userId }) {
                                 <textarea className="form-control" id="description" name='description' rows="4" onChange={handleChange}></textarea>
                                 <label className="form-label" htmlFor="description">Description<span className="text-danger">*</span></label>
                             </div>
+
                             <div className="form-outline mb-4">
                                 <label className="form-label">Category</label><br />
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryBooks" value="books" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryBooks">Books</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryArtworks" value="artworks" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryArtworks">Artworks</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryStamps" value="stamps" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryStamps">Stamps</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryCoins" value="coins" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryCoins">Coins</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryAntique" value="antique" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryFurniture">Antique</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryComics" value="comics" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryComics">Comics</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryMusic" value="music" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryMusic">Music</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryTools" value="tools" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryTools">Tools</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryWealth" value="wealth" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryWealth">Wealth</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="categoryOthers" value="others" onChange={handleChange} />
-                                    <label className="form-check-label" htmlFor="categoryOthers">Others</label>
-                                </div>
+                                {uiCategories.map((cat, index) => (
+                                    <div className="form-check form-check-inline" key={cat}>
+                                        <input
+                                            type="radio"
+                                            className="form-check-input"
+                                            name="category"
+                                            id={`category${index}`}
+                                            value={cat}
+                                            onChange={handleChange}
+                                        />
+                                        <label className="form-check-label text-capitalize" htmlFor={`category${index}`}>
+                                            {cat}
+                                        </label>
+                                    </div>
+                                ))}
                             </div>
                             <div className="form-outline mb-4">
                                 {image ? (
@@ -223,7 +223,8 @@ export default function CollectionModal({ userId }) {
                             {renderFields('date', 'Date')}
 
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <small className='small text-danger'>{resLog}</small>
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" ref={closeButtonRef}>Close</button>
                                 <button type="submit" className="btn btn-primary">Create</button>
                             </div>
                         </form>

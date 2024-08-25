@@ -6,6 +6,7 @@ import { getItem, toggleLike, addComment, deleteComment } from "../api";
 import debounce from "lodash.debounce";
 import { format } from "date-fns";
 import ItemUpdateModal from "./ItemUpdateModal";
+import ItemDeleteModal from "./ItemDeleteModal";
 
 export default function Item({
   userData,
@@ -119,7 +120,10 @@ export default function Item({
   return (
     <div>
       {userData && (userData.status === 'active') && (userData.id === item.Collection.userId || userData.role === 'admin') ? (
-        <ItemUpdateModal item={item} urlId={id} fetchItem={fetchItem} />
+        <>
+          <ItemUpdateModal item={item} urlId={id} fetchItem={fetchItem} />
+          <ItemDeleteModal urlId={id} collectionId={item.collectionId}/>
+        </>
       ) : ('')}
       <Navbar
         color_theme_toggle={color_theme_toggle}
@@ -133,9 +137,10 @@ export default function Item({
       />
       <div className="container-md  position-relative" style={{ minHeight: "100vh" }}>
         {userData && (userData.status === 'active') && (userData.id === item.Collection.userId || userData.role === 'admin') ? (
-          <button className="btn position-absolute btn-outline-secondary top-0 end-0 mx-2 mt-2" data-bs-toggle="modal" data-bs-target="#updateitemmodal">
-            <i className="fa-regular fa-pen-to-square"></i>
-          </button>
+          <div className="position-absolute top-0 end-0 mx-2 mt-2">
+            <button className="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateitemmodal"> <i className="fa-regular fa-pen-to-square"></i></button>
+            <button className="btn btn-outline-danger mx-2" data-bs-toggle="modal" data-bs-target="#deleteitemmodal"><i className="fa-regular fa-trash-can"></i></button>
+          </div>
         ) : ('')}
         <div className="row m-lg-5 my-md-4 px-lg-5 d-flex flex-wrap-reverse">
           <div className="mt-4 position-relative">
@@ -176,7 +181,7 @@ export default function Item({
               <li className="d-flex flex-coloumn mb-3" key={index}>
                 {comment.text}
                 <button className=" mx-4 btn btn-danger" onClick={() => removeComment(comment.id)}>Remove</button>
-                </li>
+              </li>
             ))}
           </ul>
         </div>

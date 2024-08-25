@@ -27,6 +27,7 @@ export const getAllCollections = (page, limit) =>  API.get(`/collection/get-all-
 export const getUserCollections = (page, limit, userId) => API.get(`/collection/get-user-collection/${userId}?page=${page}&limit=${limit}`);
 export const getLargestCollections = (limit) => API.get(`/collection/get-all-collection?limit=${limit}`);
 export const getCategoryCollections = (category, page, limit) => API.get(`/collection/get-category-collection/${category}`, { params: { page, limit } });
+export const deleteCollection = (id) => API.delete(`/collection/delete-collection/${id}`);
 
 export const createItem = (data) => API.post(`/item/create-item`, data);
 export const updateItem = (id,data) => API.put(`/item/update-item/${id}`, data);
@@ -35,6 +36,7 @@ export const getAllItems = (page, limit) =>  API.get(`/item/get-all-item?page=${
 export const getLatestItems = () => API.get('/item/get-latest-item'); 
 export const getTagItems = (tag, page, limit) => API.get(`/item/get-tag-item/${tag}`, { params: { page, limit } });
 export const getCollectionItems = (page, limit, collectionId) =>  API.get(`/item/get-collection-item/${collectionId}?page=${page}&limit=${limit}`);
+export const deleteItem = (id) => API.delete(`/item/delete-item/${id}`);
 
 export const getUser = (id) => API.get(`/user/get-user/${id}`);
 

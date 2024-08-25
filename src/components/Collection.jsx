@@ -8,6 +8,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import ItemCard from "./ItemCard";
 import ItemModal from './ItemModal'
 import { formatDistanceToNow } from "date-fns";
+import CollectionDeleteModal from "./CollectionDeleteModal";
 import CollectionUpdateModal from "./CollectionUpdateModal";
 import { useTranslation } from 'react-i18next';
 
@@ -101,6 +102,7 @@ export default function Collection({
             <>
               <ItemModal collection={collection} fetchCollection={fetchCollection} urlId={id} />
               <CollectionUpdateModal collection={collection} fetchCollection={fetchCollection} urlId={id} />
+              <CollectionDeleteModal urlId={id} userId={collection.userId}/>
             </>
           ) : ('')}
           <div className="card text-bg-dark rounded-0 position-relative" style={{ minHeight: '50vh' }}>
@@ -110,7 +112,10 @@ export default function Collection({
               style={{ height: "100%", background: 'rgba(0,0,0,.7)' }}
             >
           {userData && (userData.status === 'active') && (userData.id === collection.userId || userData.role === 'admin') ? (
-                <button className="btn position-absolute btn-outline-light top-0 end-0 mx-2 mt-2" data-bs-toggle="modal" data-bs-target="#updatecollectionmodal"><i className="fa-regular fa-pen-to-square"></i></button>
+                <div className=" position-absolute  top-0 end-0 mx-2 mt-2">
+                  <button className="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updatecollectionmodal"><i className="fa-regular fa-pen-to-square"></i></button>
+                  <button className="btn btn-outline-danger mx-2" data-bs-toggle="modal" data-bs-target="#deletecollectionmodal"><i className="fa-regular fa-trash-can"></i></button>
+                </div>
               ) : ('')}
               <h1 className="card-title">{collection.name}</h1>
               <p className="card-text">

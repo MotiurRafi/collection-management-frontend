@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { createItem, searchTag } from '../api';
 
 export default function ItemModal({ collection, fetchCollection, urlId }) {
+    const closeButtonRef = useRef(null);
+    const inputRefs = useRef({});
     const [searchedTags, setSearchedTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
+    const[resLog, setResLog] = useState('')
     const [itemData, setItemData] = useState({
         name: "",
         customFieldValues: {},
@@ -36,13 +39,21 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
             const dataToSend = {
                 ...itemData,
                 collectionId: collection.id,
-                tags: selectedTags.map(tag => tag.name) 
+                tags: selectedTags.map(tag => tag.name)
             };
             const response = await createItem(dataToSend);
             console.log(response.data);
-            fetchCollection(urlId)
+            fetchCollection(urlId);
+            closeButtonRef.current.click();
+            Object.keys(inputRefs.current).forEach(key => {
+                if (inputRefs.current[key]) {
+                    inputRefs.current[key].value = '';
+                }
+            });
+
         } catch (error) {
             console.error("Error creating item:", error);
+            setResLog('Item creation unsuccessful')
         }
     };
 
@@ -66,9 +77,9 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
     };
 
     const handleAddTag = () => {
-        const inputElement = document.getElementById('searchTag');
+        const inputElement = inputRefs.current['searchTag'];
         const tagName = inputElement.value.trim();
-    
+
         if (tagName && !selectedTags.some(tag => tag.name === tagName)) {
             setSelectedTags([...selectedTags, { name: tagName }]);
             inputElement.value = '';
@@ -100,17 +111,20 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
     const renderInputField = (field, index) => {
         if (!field.state || !field.name) return null;
 
+        const refName = field.valueName;
+
         if (field.type === 'checkbox') {
             return (
                 <div className="form-check mb-4" key={index}>
                     <input
                         type="checkbox"
-                        id={field.valueName}
-                        name={field.valueName}
+                        id={refName}
+                        name={refName}
                         className="form-check-input"
                         onChange={handleChange}
+                        ref={el => inputRefs.current[refName] = el}
                     />
-                    <label className="form-check-label" htmlFor={field.valueName}>
+                    <label className="form-check-label" htmlFor={refName}>
                         {field.name}
                     </label>
                 </div>
@@ -122,12 +136,13 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
                 <div className="form-outline mb-4" key={index}>
                     <textarea
                         className="form-control"
-                        id={field.valueName}
-                        name={field.valueName}
+                        id={refName}
+                        name={refName}
                         rows="4"
                         onChange={handleChange}
+                        ref={el => inputRefs.current[refName] = el}
                     ></textarea>
-                    <label className="form-label" htmlFor={field.valueName}>{field.name}</label>
+                    <label className="form-label" htmlFor={refName}>{field.name}</label>
                 </div>
             );
         }
@@ -136,12 +151,13 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
             <div className="form-outline mb-4" key={index}>
                 <input
                     type={field.type}
-                    id={field.valueName}
-                    name={field.valueName}
+                    id={refName}
+                    name={refName}
                     className="form-control"
                     onChange={handleChange}
+                    ref={el => inputRefs.current[refName] = el}
                 />
-                <label className="form-label" htmlFor={field.valueName}>{field.name}</label>
+                <label className="form-label" htmlFor={refName}>{field.name}</label>
             </div>
         );
     };
@@ -164,6 +180,7 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
                                     className="form-control"
                                     onChange={handleNameChange}
                                     required
+                                    ref={el => inputRefs.current['name'] = el}
                                 />
                                 <label className="form-label" htmlFor="name">Name</label>
                             </div>
@@ -177,6 +194,7 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
                                     className="searchTag form-control"
                                     onChange={(e) => handleTagSearch(e.target.value)}
                                     autoComplete="off"
+                                    ref={el => inputRefs.current['searchTag'] = el}
                                 />
                                 {searchedTags.length > 0 && (
                                     <ul className="dropdown-menu show">
@@ -193,31 +211,19 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
                                         ))}
                                     </ul>
                                 )}
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary mt-2"
-                                    disabled={searchedTags.length > 0}
-                                    onClick={handleAddTag}
-                                >
-                                    Add
-                                </button>
-                            </div>
-
-                            <div className="selected-tags mt-3">
-                                {selectedTags.map((tag) => (
-                                    <span key={tag.id} className="badge bg-primary me-2">
-                                        {tag.name}
-                                        <button
-                                            type="button"
-                                            className="btn-close ms-2"
-                                            aria-label="Remove"
-                                            onClick={() => handleRemoveTag(tag)}
-                                        ></button>
-                                    </span>
-                                ))}
+                                <button type="button" className="btn btn-primary mt-2" onClick={handleAddTag}>Add Tag</button>
+                                <div className="mt-3">
+                                    {selectedTags.map((tag) => (
+                                        <span key={tag.id} className="badge bg-secondary me-2">
+                                            {tag.name}
+                                            <button type="button" className="btn-close btn-close-white ms-1" onClick={() => handleRemoveTag(tag)}></button>
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <small className='small text-danger'>{resLog}</small>
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" ref={closeButtonRef}>Close</button>
                                 <button type="submit" className="btn btn-primary">Create</button>
                             </div>
                         </form>

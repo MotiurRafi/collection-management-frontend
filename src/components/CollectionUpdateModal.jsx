@@ -1,26 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { updateCollection } from '../api';
 
 export default function CollectionUpdateModal({ collection, fetchCollection, urlId }) {
+    const closeButtonRef = useRef(null);
+    const [resLog, setResLog] = useState('')
     const [name, setName] = useState(collection.name);
     const [description, setDescription] = useState(collection.description);
     const [image, setImage] = useState(null);
     const [category, setCategory] = useState(collection.category);
     const [fields, setFields] = useState({
-        sfn: { sfn1: '', sfn2: '', sfn3: '' },
-        mlfn: { mlfn1: '', mlfn2: '', mlfn3: '' },
-        ifn: { ifn1: '', ifn2: '', ifn3: '' },
-        cfn: { cfn1: '', cfn2: '', cfn3: '' },
-        dfn: { dfn1: '', dfn2: '', dfn3: '' }
+        sfn: {},
+        mlfn: {},
+        ifn: {},
+        cfn: {},
+        dfn: {}
     });
+    const uiCategories = ['books', 'artworks', 'stamps', 'coins', 'antique', 'comics', 'music', 'tools', 'wealth', 'others']
 
     useEffect(() => {
         const initialFields = {
-            sfn: { sfn1: '', sfn2: '', sfn3: '' },
-            mlfn: { mlfn1: '', mlfn2: '', mlfn3: '' },
-            ifn: { ifn1: '', ifn2: '', ifn3: '' },
-            cfn: { cfn1: '', cfn2: '', cfn3: '' },
-            dfn: { dfn1: '', dfn2: '', dfn3: '' }
+            sfn: {},
+            mlfn: {},
+            ifn: {},
+            cfn: {},
+            dfn: {}
         };
 
         if (collection.integer_field1_state && collection.integer_field1_name) {
@@ -166,8 +169,10 @@ export default function CollectionUpdateModal({ collection, fetchCollection, url
         try {
             await updateCollection(formData, collection.id);
             fetchCollection(urlId)
+            closeButtonRef.current.click();
         } catch (error) {
             console.error('Failed to update collection', error);
+            setResLog('Updating collection failed')
         }
     };
 
@@ -209,47 +214,23 @@ export default function CollectionUpdateModal({ collection, fetchCollection, url
 
                             <div className="form-outline mb-4">
                                 <label className="form-label">Category</label><br />
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category1" value="books" checked={category === "books"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category1">Books</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category2" value="artworks" checked={category === "artworks"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category2">Artworks</label>
-                                </div> 
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category4" value="stamps" checked={category === "stamps"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category4">Stamps</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category5" value="coins" checked={category === "coins"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category5">Coins</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category5" value="antique" checked={category === "antique"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category5">Antique</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category9" value="comics" checked={category === "comics"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category9">Comics</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category9" value="music" checked={category === "music"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category9">Music</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category9" value="tools" checked={category === "tools"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category9">Tools</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category10" value="wealth" checked={category === "wealth"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category10">Wealth</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input type="radio" className="form-check-input" name="category" id="category10" value="others" checked={category === "others"} onChange={(e) => setCategory(e.target.value)} />
-                                    <label className="form-check-label" htmlFor="category10">Others</label>
-                                </div>
-
+                                {uiCategories.map((cat, index) => (
+                                    <div className="form-check form-check-inline" key={index}>
+                                        <input
+                                            type="radio"
+                                            className="form-check-input"
+                                            name="category"
+                                            id={`category${index}`}
+                                            value={cat}
+                                            checked={category === cat}
+                                            onChange={(e) => setCategory(e.target.value)}
+                                            required
+                                        />
+                                        <label className="form-check-label text-capitalize" htmlFor={`category${index}`}>
+                                            {cat}
+                                        </label>
+                                    </div>
+                                ))}
                             </div>
 
                             <div className="form-outline mb-4">
@@ -271,8 +252,9 @@ export default function CollectionUpdateModal({ collection, fetchCollection, url
                             {renderFields('dfn', 'Date')}
 
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" className="btn btn-primary">Save Changes</button>
+                                <small className='small text-danger'>{resLog}</small>
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" ref={closeButtonRef}>Close</button>
+                                <button type="submit" className="btn btn-primary">Save</button>
                             </div>
                         </form>
                     </div>

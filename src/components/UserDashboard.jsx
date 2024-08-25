@@ -21,6 +21,7 @@ export default function UserDashboard({
   searchResult,
 }) {
   const [searchParams] = useSearchParams();
+  const [collectionCount, setCollectionCount] = useState('')
   const id = searchParams.get("id");
   const [user, setUser] = useState(null);
   const [collections, setCollections] = useState([]);
@@ -45,34 +46,44 @@ export default function UserDashboard({
     }
   }, 200);
 
-  const fetchMoreCollections = debounce(async () => {
+  const fetchMoreCollections = debounce(async (addedNew) => {
     const userId = id;
+    const resetPage = addedNew ? 1 : page;
+
     try {
-      const response = await getUserCollections(page, limit, userId);
-      const newCollections = response.data;
+      const response = await getUserCollections(resetPage, limit, userId);
+      const newCollections = response.data.collections;
+      setCollectionCount(response.data.collectionCount)
 
       setCollections((prevCollections) => {
-        if (!Array.isArray(prevCollections)) {
-          return newCollections;
+        if (addedNew) {
+          return [...newCollections];
         }
 
-        return [...prevCollections, ...newCollections];
+        const collectionMap = new Map(prevCollections.map(collection => [collection.id, collection]));
+
+        newCollections.forEach(collection => {
+          collectionMap.set(collection.id, collection);
+        });
+
+        return Array.from(collectionMap.values());
       });
 
       if (newCollections.length < limit) {
         setHasMore(false);
       } else {
-        setPage((prevPage) => prevPage + 1);
+        setPage((prevPage) => addedNew ? 2 : prevPage + 1); 
       }
     } catch (error) {
       console.error("Error fetching collections:", error);
     }
   }, 300);
 
+
   return (
     <div>
       {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?
-        (<CollectionModal userId={id} />):
+        (<CollectionModal userId={id} fetchMoreCollections={fetchMoreCollections} setPage={setPage} />) :
         ''
       }
       <Navbar
@@ -108,11 +119,7 @@ export default function UserDashboard({
                         {format(new Date(user.createdAt), "dd MMM yyyy")}
                       </p>
                       <div className="d-flex justify-content-center mb-2">
-                        <button type="button" className="btn btn-primary">
-                          {collections.length < 10
-                            ? "0" + collections.length
-                            : collections.length}{" "}
-                          - {t('Collections')}
+                        <button type="button" className="btn btn-primary"> {collectionCount} - {t('Collections')}
                         </button>
                       </div>
                     </div>
@@ -144,9 +151,9 @@ export default function UserDashboard({
                   <div className="row">
                     <div className="col  bg-body-tertiary rounded-3 p-3 mb-4 d-flex justify-content-between align-items-center mx-3">
                       <p className="m-0">{t('Collections')}</p>
-                      {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin' ) ?
-                      (<i className="fa-solid fa-plus rounded bg-primary-subtle p-2 btn " data-bs-toggle="modal" data-bs-target="#exampleModal"></i>):
-                      ''
+                      {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?
+                        (<i className="fa-solid fa-plus rounded bg-primary-subtle p-2 btn " data-bs-toggle="modal" data-bs-target="#exampleModal"></i>) :
+                        ''
                       }
                     </div>
                   </div>

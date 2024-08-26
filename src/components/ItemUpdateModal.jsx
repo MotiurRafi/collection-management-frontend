@@ -119,10 +119,26 @@ export default function ItemUpdateModal({ item, urlId, fetchItem }) {
     if (!item?.Collection) return null;
 
     const fields = [
+      { name: 'sfv1', type: 'text', label: item.Collection.string_field1_name, state: item.Collection.string_field1_state },
+      { name: 'sfv2', type: 'text', label: item.Collection.string_field2_name, state: item.Collection.string_field2_state },
+      { name: 'sfv3', type: 'text', label: item.Collection.string_field3_name, state: item.Collection.string_field3_state },
+      { name: 'ifv1', type: 'number', label: item.Collection.integer_field1_name, state: item.Collection.integer_field1_state },
+      { name: 'ifv2', type: 'number', label: item.Collection.integer_field2_name, state: item.Collection.integer_field2_state },
+      { name: 'ifv3', type: 'number', label: item.Collection.integer_field3_name, state: item.Collection.integer_field3_state },
+      { name: 'mlfv1', type: 'textarea', label: item.Collection.multiline_text_field1_name, state: item.Collection.multiline_text_field1_state },
+      { name: 'mlfv2', type: 'textarea', label: item.Collection.multiline_text_field2_name, state: item.Collection.multiline_text_field2_state },
+      { name: 'mlfv3', type: 'textarea', label: item.Collection.multiline_text_field3_name, state: item.Collection.multiline_text_field3_state },
+      { name: 'cfv1', type: 'checkbox', label: item.Collection.checkbox_field1_name, state: item.Collection.checkbox_field1_state },
+      { name: 'cfv2', type: 'checkbox', label: item.Collection.checkbox_field2_name, state: item.Collection.checkbox_field2_state },
+      { name: 'cfv3', type: 'checkbox', label: item.Collection.checkbox_field3_name, state: item.Collection.checkbox_field3_state },
+      { name: 'dfv1', type: 'date', label: item.Collection.date_field1_name, state: item.Collection.date_field1_state },
+      { name: 'dfv2', type: 'date', label: item.Collection.date_field2_name, state: item.Collection.date_field2_state },
+      { name: 'dfv3', type: 'date', label: item.Collection.date_field3_name, state: item.Collection.date_field3_state },
     ].filter(field => field.state);
 
     return renderDynamicFields(fields);
   };
+
 
   const handleTagSearch = async (query) => {
     if (query && query !== '') {

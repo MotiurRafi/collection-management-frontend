@@ -33,7 +33,7 @@ export default function Item({
       fetchItem(urlId);
       fetchComment(urlId)
     }
-    socketRef.current = io('https://collection-management-backend.onrender.com');
+    socketRef.current = io('https://collection-management-backend.onrender.com:8080');
 
     socketRef.current.emit('join-room', urlId)
 
@@ -42,7 +42,7 @@ export default function Item({
   useEffect(() => {
     if (socketRef.current) {
       socketRef.current.on('comments-updated', (updatedComments) => {
-        console.log("Received updated comments:", updatedComments); // Log received comments
+        console.log("Received updated comments:", updatedComments); 
         setComments(updatedComments);
       });
     }

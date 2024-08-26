@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { getItem, toggleLike, addComment, deleteComment } from "../api";
+import { getItem, toggleLike, addComment, deleteComment, getItemComment, editComment } from "../api";
 import debounce from "lodash.debounce";
 import { format } from "date-fns";
 import ItemUpdateModal from "./ItemUpdateModal";
 import ItemDeleteModal from "./ItemDeleteModal";
+import io from 'socket.io-client';
+
 
 export default function Item({
   userData,
@@ -18,19 +20,44 @@ export default function Item({
   setSearchValue,
   searchResult,
 }) {
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [commentText, setCommentText] = useState("");
+  const socketRef = useRef(null);
   const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
+  const urlId = searchParams.get("id");
   const [item, setItem] = useState(null);
+  const [comments, setComments] = useState([])
 
   useEffect(() => {
-    if (id) {
-      fetchItem(id);
+    if (urlId) {
+      fetchItem(urlId);
+      fetchComment(urlId)
     }
-  }, [id]);
+    socketRef.current = io('http://localhost:8080');
 
-  const fetchItem = debounce(async (id) => {
+    socketRef.current.emit('join-room', urlId)
+
+  }, [urlId]);
+
+  useEffect(() => {
+    if (socketRef.current) {
+      socketRef.current.on('comments-updated', (updatedComments) => {
+        console.log("Received updated comments:", updatedComments); // Log received comments
+        setComments(updatedComments);
+      });
+    }
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.off('comments-updated');
+      }
+    };
+  }, []);
+
+
+
+  const fetchItem = debounce(async (urlId) => {
     try {
-      const { data } = await getItem(id);
+      const { data } = await getItem(urlId);
       setItem(data);
     } catch (error) {
       console.error("Error fetching item:", error);
@@ -82,38 +109,61 @@ export default function Item({
 
   const handleLike = async (event) => {
     event.preventDefault();
-    const itemId = item.id;
     try {
-      const response = await toggleLike(itemId);
+      const response = await toggleLike(urlId);
       console.log(response.data);
-      fetchItem(id)
+      fetchItem(urlId)
     } catch (error) {
       console.error("Error toggling like:", error);
     }
   };
+
+
+  const fetchComment = async (urlId) => {
+    try {
+      const response = await getItemComment(urlId)
+      setComments(response.data)
+    } catch (error) {
+      console.log("Error Fetching Comments", error)
+    }
+  }
 
   const createComment = async (e) => {
     e.preventDefault();
     const text = e.target.comment.value;
     if (!text) return;
     try {
-      const response = await addComment(text, item.id);
-      console.log(response.data);
-      fetchItem(id)
+      await addComment(text, urlId);
+      fetchComment(urlId);
+      socketRef.current.emit('action', urlId);
+      e.target.reset();
     } catch (error) {
       console.log('Error adding comment', error);
     }
   };
 
-  const removeComment = async (id) => {
+  const removeComment = async (commentId) => {
+    console.log(item)
     try {
-      const response = await deleteComment(id)
-      console.log(response.data)
-      fetchItem(item.id)
+      await deleteComment(commentId);
+      fetchComment(urlId);
+      socketRef.current.emit('action', urlId);
     } catch (error) {
-      console.log('error removing comment', error)
+      console.log('Error removing comment', error);
     }
-  }
+  };
+
+  const updateComment = async (commentId, text) => {
+    try {
+      await editComment(commentId, { text });
+      fetchComment(urlId);
+      socketRef.current.emit('action', urlId);
+      setEditingCommentId(null);
+    } catch (error) {
+      console.log('Error updating comment', error);
+    }
+  };
+
 
   if (!item) return null;
 
@@ -121,8 +171,8 @@ export default function Item({
     <div>
       {userData && (userData.status === 'active') && (userData.id === item.Collection.userId || userData.role === 'admin') ? (
         <>
-          <ItemUpdateModal item={item} urlId={id} fetchItem={fetchItem} />
-          <ItemDeleteModal urlId={id} collectionId={item.collectionId}/>
+          <ItemUpdateModal item={item} urlId={urlId} fetchItem={fetchItem} />
+          <ItemDeleteModal urlId={urlId} collectionId={item.collectionId} />
         </>
       ) : ('')}
       <Navbar
@@ -168,21 +218,52 @@ export default function Item({
           </div>
         </div>
         <div className="my-5 m-lg-5 my-md-4 my-sm-4 px-lg-5">
-          <h3>Comments:</h3>
-          <form onSubmit={createComment}>
-            <div className="mb-3">
-              <label htmlFor="comment" className="form-label">Add a Comment</label>
-              <input type="text" className="form-control" id="comment" aria-describedby="comment" />
-            </div>
-            <button type="submit" className=" mb-3 btn btn-primary">Add Comment</button>
-          </form>
-          <ul className="d-flex flex-column flex-coloumn gap-1">
-            {item.Comments?.map((comment, index) => (
-              <li className="d-flex flex-coloumn mb-3" key={index}>
-                {comment.text}
-                <button className=" mx-4 btn btn-danger" onClick={() => removeComment(comment.id)}>Remove</button>
+          <h3>Comments - </h3>
+          {userData &&
+            <form onSubmit={createComment}>
+              <div className="mb-3">
+                <label htmlFor="comment" className="form-label">Add a Comment</label>
+                <input type="text" className="form-control" id="comment" aria-describedby="comment" />
+              </div>
+              <button type="submit" className=" mb-3 btn btn-primary">Add Comment</button>
+            </form>
+          }
+          <ul className="d-flex flex-column gap-1">
+            {comments && comments.map((comment) => (
+              <li className="d-flex flex-column mb-4 position-relative" key={comment.id}>
+                <h6>
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" className=" mx-2 rounded-circle img-fluid" style={{width: "30px", border: "2px solid black"}}/>
+                  <a className="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href={`/dashboard?id=${comment.User.id}`}>{comment.User.username}</a></h6>
+                {editingCommentId === comment.id ? (
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    updateComment(comment.id, commentText);
+                  }}>
+                    <input
+                      type="text"
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      autoFocus
+                    />
+                    <button type="submit" className="btn btn-warning">Save</button>
+                  </form>
+                ) : (
+                  <>
+                    {comment.text}
+                    {userData && userData.id === comment.User.id &&
+                      <div className="button-group position-absolute top-100 start-0" >
+                        <button className="border-0 text-danger text-bold" style={{ background: 'transparent', fontSize: "12px" }} onClick={() => removeComment(comment.id)}>REMOVE</button>
+                        <button className="border-0 text-warning text-bold" style={{ background: 'transparent', fontSize: "12px" }} onClick={() => {
+                          setEditingCommentId(comment.id);
+                          setCommentText(comment.text);
+                        }}>EDIT</button>
+                      </div>
+                    }
+                  </>
+                )}
               </li>
             ))}
+
           </ul>
         </div>
       </div>

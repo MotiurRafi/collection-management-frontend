@@ -33,7 +33,7 @@ export default function Item({
       fetchItem(urlId);
       fetchComment(urlId)
     }
-    socketRef.current = io('https://collection-management-backend.onrender.com:8080');
+    socketRef.current = io('http://collection-management-backend.onrender.com:8080');
 
     socketRef.current.emit('join-room', urlId)
 

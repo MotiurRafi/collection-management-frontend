@@ -33,7 +33,7 @@ export default function Item({
       fetchItem(urlId);
       fetchComment(urlId)
     }
-    socketRef.current = io('wss://collection-management-backend.onrender.com:8080', {
+    socketRef.current = io('wss://collection-management-backend.onrender.com', {
       path: '/socket.io',
       transports: ['websocket'],
     });

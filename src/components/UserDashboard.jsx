@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useSearchParams } from "react-router-dom";
-import { getUser, getUserCollections } from "../api";
+import { getUser, getUserCollections, salesforceAuthUrl } from "../api";
 import debounce from "lodash.debounce";
 import { format } from "date-fns";
 import CollectionCard from "./CollectionCard";
@@ -72,13 +72,22 @@ export default function UserDashboard({
       if (newCollections.length < limit) {
         setHasMore(false);
       } else {
-        setPage((prevPage) => addedNew ? 2 : prevPage + 1); 
+        setPage((prevPage) => addedNew ? 2 : prevPage + 1);
       }
     } catch (error) {
       console.error("Error fetching collections:", error);
     }
   }, 300);
 
+  const handleSalesforceLogin = async () => {
+    try {
+      const response = await salesforceAuthUrl();
+      console.log('Salesforce URL:', response.data.url);
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error('Error fetching Salesforce login URL:', error);
+    }
+  };
 
   return (
     <div>
@@ -121,6 +130,12 @@ export default function UserDashboard({
                       <div className="d-flex justify-content-center mb-2">
                         <button type="button" className="btn btn-primary"> {collectionCount} - {t('Collections')}
                         </button>
+                      </div>
+                      <div className="d-flex justify-content-center mb-2">
+                        {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?
+                          (<button onClick={handleSalesforceLogin} className="btn button-success rounded bg-primary-subtle p-2 btn "> Salesforce</button>) :
+                          ''
+                        }
                       </div>
                     </div>
                   </div>

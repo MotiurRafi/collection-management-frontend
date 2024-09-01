@@ -79,9 +79,32 @@ export default function UserDashboard({
     }
   }, 300);
 
+
+  function generateCodeVerifier(length) {
+    const array = new Uint8Array(length);
+    window.crypto.getRandomValues(array);
+    return Array.from(array, dec => ('0' + dec.toString(16)).slice(-2)).join('');
+  }
+
+  async function generateCodeChallenge(codeVerifier) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(codeVerifier);
+    const digest = await crypto.subtle.digest('SHA-256', data);
+    const base64Url = btoa(String.fromCharCode(...new Uint8Array(digest)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+    return base64Url;
+  }
+
   const handleSalesforceLogin = async () => {
     try {
-      const response = await salesforceAuthUrl();
+      const codeVerifier = generateCodeVerifier(128);
+      const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+      sessionStorage.setItem('code_verifier', codeVerifier);
+
+      const response = await salesforceAuthUrl(codeChallenge);
       console.log('Salesforce URL:', response.data.url);
       window.location.href = response.data.url;
     } catch (error) {

@@ -79,10 +79,14 @@ export default function UserDashboard({
     }
   }, 300);
 
-  function generateCodeVerifier(length) {
-    const array = new Uint8Array(length);
-    window.crypto.getRandomValues(array);
-    return Array.from(array, dec => ('0' + dec.toString(16)).slice(-2)).join('');
+  function generateCodeVerifier(length = 128) {
+    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+    let codeVerifier = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      codeVerifier += charset[randomIndex];
+    }
+    return codeVerifier;
   }
 
   async function generateCodeChallenge(codeVerifier) {
@@ -93,11 +97,12 @@ export default function UserDashboard({
   }
 
   function base64UrlEncode(arrayBuffer) {
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+    return base64;
   }
-
-
   const handleSalesforceLogin = async () => {
     try {
       const codeVerifier = generateCodeVerifier(128);

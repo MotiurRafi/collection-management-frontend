@@ -82,21 +82,19 @@ export default function UserDashboard({
   function generateCodeVerifier(length) {
     const array = new Uint8Array(length);
     window.crypto.getRandomValues(array);
-    return Array.from(array, (dec) => ('0' + dec.toString(16)).slice(-2)).join('');
+    return Array.from(array, dec => ('0' + dec.toString(16)).slice(-2)).join('');
   }
 
   async function generateCodeChallenge(codeVerifier) {
     const encoder = new TextEncoder();
     const data = encoder.encode(codeVerifier);
-    const digest = await window.crypto.subtle.digest('SHA-256', data);
+    const digest = await crypto.subtle.digest('SHA-256', data);
     return base64UrlEncode(new Uint8Array(digest));
   }
 
   function base64UrlEncode(arrayBuffer) {
-    return btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   }
 
   const handleSalesforceLogin = async () => {
@@ -105,14 +103,13 @@ export default function UserDashboard({
       const codeChallenge = await generateCodeChallenge(codeVerifier);
 
       sessionStorage.setItem('code_verifier', codeVerifier);
-      sessionStorage.setItem('code_challenge', codeChallenge);
 
       const response = await salesforceAuthUrl(codeChallenge);
       console.log('Salesforce URL:', response.data.url);
 
       window.location.href = response.data.url;
     } catch (error) {
-      console.error('Error fetching Salesforce login URL:', error.message);
+      console.error('Error fetching Salesforce login URL:', error);
     }
   };
 

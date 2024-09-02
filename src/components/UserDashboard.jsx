@@ -103,6 +103,7 @@ export default function UserDashboard({
       const codeChallenge = await generateCodeChallenge(codeVerifier);
 
       sessionStorage.setItem('code_verifier', codeVerifier);
+      sessionStorage.setItem('code_challenge', codeChallenge);
 
       const response = await salesforceAuthUrl(codeChallenge);
       console.log('Salesforce URL:', response.data.url);

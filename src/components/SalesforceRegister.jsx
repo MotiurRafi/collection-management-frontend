@@ -32,6 +32,7 @@ export default function SalesforceRegister({ userData }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setEmail(userData.email)
     const data = { email, name, phone, accessToken, instanceUrl };
     try {
       const response = await salesforceRegister(data);
@@ -46,7 +47,7 @@ export default function SalesforceRegister({ userData }) {
     <div>
       <form id="salesforceForm" onSubmit={handleSubmit}>
         <input type="text" name="name" onChange={(e) => setName(e.target.value)} placeholder="Name" required />
-        <input type="email" name="email" onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
+        <input type="email" name="email" value={userData.email} placeholder="Email" required />
         <input type="text" name="phone" onChange={(e) => setPhone(e.target.value)} placeholder="Phone Number" />
         <button type="submit">Create Salesforce Account</button>
       </form>

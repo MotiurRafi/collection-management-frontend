@@ -79,48 +79,42 @@ export default function UserDashboard({
     }
   }, 300);
 
-  function generateCodeVerifier(length = 128) {
-    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-    let codeVerifier = '';
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * charset.length);
-        codeVerifier += charset[randomIndex];
-    }
-    return codeVerifier;
-}
+  function generateCodeVerifier(length) {
+    const array = new Uint8Array(length);
+    window.crypto.getRandomValues(array);
+    return Array.from(array, (dec) => ('0' + dec.toString(16)).slice(-2)).join('');
+  }
 
-async function generateCodeChallenge(codeVerifier) {
+  async function generateCodeChallenge(codeVerifier) {
     const encoder = new TextEncoder();
     const data = encoder.encode(codeVerifier);
-    const digest = await crypto.subtle.digest('SHA-256', data);
+    const digest = await window.crypto.subtle.digest('SHA-256', data);
     return base64UrlEncode(new Uint8Array(digest));
-}
+  }
 
-function base64UrlEncode(arrayBuffer) {
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-    return base64;
-}
+  function base64UrlEncode(arrayBuffer) {
+    return btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  }
 
-const handleSalesforceLogin = async () => {
+  const handleSalesforceLogin = async () => {
     try {
-        const codeVerifier = generateCodeVerifier(128);
-        const codeChallenge = await generateCodeChallenge(codeVerifier);
+      const codeVerifier = generateCodeVerifier(128);
+      const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-        sessionStorage.setItem('code_verifier', codeVerifier);
-        sessionStorage.setItem('code_challenge', codeChallenge)
+      sessionStorage.setItem('code_verifier', codeVerifier);
+      sessionStorage.setItem('code_challenge', codeChallenge);
 
-        const response = await salesforceAuthUrl(codeChallenge);
-        console.log('Salesforce URL:', response.data.url);
+      const response = await salesforceAuthUrl(codeChallenge);
+      console.log('Salesforce URL:', response.data.url);
 
-        window.location.href = response.data.url;
+      window.location.href = response.data.url;
     } catch (error) {
-        console.error('Error fetching Salesforce login URL:', error);
+      console.error('Error fetching Salesforce login URL:', error.message);
     }
-};
-
+  };
 
   return (
     <div>

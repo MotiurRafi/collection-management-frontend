@@ -14,9 +14,8 @@ export default function SalesforceRegister({ userData }) {
 
   useEffect(() => {
     const fetchToken = async () => {
-      const codeVerifier = sessionStorage.getItem('code_verifier');
       try {
-        const response = await getToken({ code, codeVerifier });
+        const response = await getToken({ code });
         setAccessToken(response.data.accessToken);
         setInstanceUrl(response.data.instanceUrl);
         sessionStorage.setItem('accessToken', response.data.accessToken);

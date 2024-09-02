@@ -79,33 +79,9 @@ export default function UserDashboard({
     }
   }, 300);
 
-  function generateCodeVerifier(length) {
-    const array = new Uint8Array(length);
-    window.crypto.getRandomValues(array);
-    return Array.from(array, dec => ('0' + dec.toString(16)).slice(-2)).join('');
-  }
-
-  async function generateCodeChallenge(codeVerifier) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(codeVerifier);
-    const digest = await crypto.subtle.digest('SHA-256', data);
-    return base64UrlEncode(new Uint8Array(digest));
-  }
-
-  function base64UrlEncode(arrayBuffer) {
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-  }
-
   const handleSalesforceLogin = async () => {
     try {
-      const codeVerifier = generateCodeVerifier(128);
-      const codeChallenge = await generateCodeChallenge(codeVerifier);
-
-      sessionStorage.setItem('code_verifier', codeVerifier);
-      sessionStorage.setItem('code_challenge', codeChallenge);
-
-      const response = await salesforceAuthUrl(codeChallenge);
+      const response = await salesforceAuthUrl();
       console.log('Salesforce URL:', response.data.url);
 
       window.location.href = response.data.url;

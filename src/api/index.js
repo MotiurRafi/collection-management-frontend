@@ -59,6 +59,6 @@ export const adminBlock = (userId) => API.put(`/admin/block/${userId}`);
 export const adminUnblock = (userId) => API.put(`/admin/unblock/${userId}`);
 
 
-export const salesforceAuthUrl = (codeChallenge) => API.get(`/salesforce/auth-url`, { params: { codeChallenge } });
+export const salesforceAuthUrl = () => API.get(`/salesforce/auth-url`);
 export const salesforceRegister = (data) => API.post('/salesforce/register', data);
-export const getToken = ({ code, codeVerifier }) => API.post('/salesforce/token', { code, codeVerifier });
+export const getToken = ({code}) => API.post('/salesforce/token', code);

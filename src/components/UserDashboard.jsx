@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useSearchParams } from "react-router-dom";
-import { getUser, getUserCollections, salesforceAuthUrl } from "../api";
+import { getUser, getUserCollections, salesforceAuthUrl, salesforceUserCheck } from "../api";
 import debounce from "lodash.debounce";
 import { format } from "date-fns";
 import CollectionCard from "./CollectionCard";
@@ -37,6 +37,12 @@ export default function UserDashboard({
     }
   }, [id]);
 
+  useEffect(()=>{
+    if (userData) {
+      checkSalesforceConnectivity()
+    }
+  },[userData])
+  
   const fetchUser = debounce(async (id) => {
     try {
       const response = await getUser(id);
@@ -90,6 +96,14 @@ export default function UserDashboard({
     }
   };
 
+  const checkSalesforceConnectivity = async()=>{
+    try {
+      const response = await salesforceUserCheck(userData.email)
+      console.log(response.data)
+    } catch (error) {
+      console.error("error check : ", error);
+    }
+  }
   return (
     <div>
       {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?

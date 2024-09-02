@@ -62,3 +62,4 @@ export const adminUnblock = (userId) => API.put(`/admin/unblock/${userId}`);
 export const salesforceAuthUrl = () => API.get(`/salesforce/auth-url`);
 export const salesforceRegister = (data) => API.post('/salesforce/register', data);
 export const getToken = (code) => API.post('/salesforce/token', { code });
+export const salesforceUserCheck = (email) => API.post('/salesforce/user-check', { email });

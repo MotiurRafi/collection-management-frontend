@@ -83,41 +83,43 @@ export default function UserDashboard({
     const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
     let codeVerifier = '';
     for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * charset.length);
-      codeVerifier += charset[randomIndex];
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        codeVerifier += charset[randomIndex];
     }
     return codeVerifier;
-  }
+}
 
-  async function generateCodeChallenge(codeVerifier) {
+async function generateCodeChallenge(codeVerifier) {
     const encoder = new TextEncoder();
     const data = encoder.encode(codeVerifier);
     const digest = await crypto.subtle.digest('SHA-256', data);
     return base64UrlEncode(new Uint8Array(digest));
-  }
+}
 
-  function base64UrlEncode(arrayBuffer) {
+function base64UrlEncode(arrayBuffer) {
     const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
     return base64;
-  }
-  const handleSalesforceLogin = async () => {
+}
+
+const handleSalesforceLogin = async () => {
     try {
-      const codeVerifier = generateCodeVerifier(128);
-      const codeChallenge = await generateCodeChallenge(codeVerifier);
+        const codeVerifier = generateCodeVerifier(128);
+        const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-      sessionStorage.setItem('code_verifier', codeVerifier);
+        sessionStorage.setItem('code_verifier', codeVerifier);
+        sessionStorage.setItem('code_challenge', codeChallenge)
 
-      const response = await salesforceAuthUrl(codeChallenge);
-      console.log('Salesforce URL:', response.data.url);
+        const response = await salesforceAuthUrl(codeChallenge);
+        console.log('Salesforce URL:', response.data.url);
 
-      window.location.href = response.data.url;
+        window.location.href = response.data.url;
     } catch (error) {
-      console.error('Error fetching Salesforce login URL:', error);
+        console.error('Error fetching Salesforce login URL:', error);
     }
-  };
+};
 
 
   return (

@@ -15,7 +15,7 @@ export default function SalesforceRegister({ userData }) {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const response = await getToken({ code });
+        const response = await getToken(code);
         setAccessToken(response.data.accessToken);
         setInstanceUrl(response.data.instanceUrl);
         sessionStorage.setItem('accessToken', response.data.accessToken);

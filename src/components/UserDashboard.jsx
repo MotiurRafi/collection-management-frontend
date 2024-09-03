@@ -133,7 +133,7 @@ export default function UserDashboard({
                         </button>
                       </div>
                       <div className="d-flex justify-content-center mb-2">
-                        {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?
+                        {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') &&  (userData.salesforceStatus !== 'true') ?
                           (<button onClick={handleSalesforceLogin} className="btn button-success rounded bg-primary-subtle p-2 btn "> Connect Salesforce</button>) :
                           ''
                         }

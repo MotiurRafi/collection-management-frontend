@@ -137,6 +137,10 @@ export default function UserDashboard({
                           (<button onClick={handleSalesforceLogin} className="btn button-success rounded bg-primary-subtle p-2 btn "> Connect Salesforce</button>) :
                           ''
                         }
+                        {userData && (userData.id == id || userData.role === 'admin') && (userData.salesforceStatus === 'true') ?
+                          (<button className="btn button-success rounded bg-primary-subtle p-2 btn ">Salesforce Connected</button>) :
+                          ''
+                        }
                       </div>
                     </div>
                   </div>

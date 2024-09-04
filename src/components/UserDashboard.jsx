@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useSearchParams } from "react-router-dom";
-import { getUser, getUserCollections, salesforceAuthUrl } from "../api";
+import { getUser, getUserCollections, salesforceAuthUrl, getJiraTicket } from "../api";
 import debounce from "lodash.debounce";
 import { format } from "date-fns";
 import CollectionCard from "./CollectionCard";
@@ -36,6 +36,22 @@ export default function UserDashboard({
       fetchMoreCollections();
     }
   }, [id]);
+
+  useEffect(() => {
+    if (userData) {
+      fetchJiraTickets()
+    }
+  }, [userData]);
+
+  const fetchJiraTickets = async()=>{
+    const email = userData.email
+    try {
+      const response = await getJiraTicket(email)
+      console.log(response)
+    } catch (error) {
+      console.error("error getting user tickets", error)
+    }
+  }
 
   const fetchUser = debounce(async (id) => {
     try {

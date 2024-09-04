@@ -11,7 +11,7 @@ export default function Footer({ userData }) {
           <a className="text-reset fw-bold" href="https://motiurrafi.info/">
             mr.com
           </a>
-          <button className=" btn btn-primary rounded bg-primary-subtle p-2 btn " data-bs-toggle="modal" data-bs-target="#reportmodal">Report</button>
+          <button className=" btn btn-primary" data-bs-toggle="modal" data-bs-target="#reportmodal">Report</button>
         </div>
       </footer>
     </div>

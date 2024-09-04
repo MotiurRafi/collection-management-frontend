@@ -208,7 +208,7 @@ export default function UserDashboard({
           </section>
         )}
       </div>
-      <Footer />
+      <Footer userData={userData} />
     </div>
   );
 }

@@ -166,7 +166,7 @@ export default function Page({
           </section>
         )}
       </div>
-      <Footer />
+      <Footer userData={userData} />
     </div>
   );
 }

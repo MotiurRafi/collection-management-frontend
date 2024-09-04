@@ -87,7 +87,7 @@ export default function Items({ userData, setUserData, color_theme_toggle, color
           </InfiniteScroll>
         </div>
       </section>
-      <Footer />
+      <Footer userData={userData} />
     </div>
   );
 }

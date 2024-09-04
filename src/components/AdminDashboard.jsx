@@ -215,7 +215,7 @@ export default function AdminDashboard({
                     </form>
                 </div>
             </div>
-            <Footer />
+            <Footer userData={userData} />
         </div>
     );
 }

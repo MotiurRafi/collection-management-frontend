@@ -35,7 +35,7 @@ export default function Home({ userData, setUserData, color_theme_toggle, colorT
   }, 300)
 
   return (
-    <div className="bg-dark-subtle" style={{minHeight: "100vh"}}>
+    <div className="bg-dark-subtle" style={{ minHeight: "100vh" }}>
       <Navbar
         color_theme_toggle={color_theme_toggle}
         colorThemeState={colorThemeState}
@@ -52,7 +52,7 @@ export default function Home({ userData, setUserData, color_theme_toggle, colorT
       <div className="largest_collections">
         <HomeCollections largestCollections={largestCollections} />
       </div>
-      <Footer />
+      <Footer userData={userData} />
     </div>
   );
 }

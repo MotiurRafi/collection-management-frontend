@@ -65,3 +65,4 @@ export const getToken = (code) => API.post('/salesforce/token', { code });
 
 
 export const createJiraTicket = (data) => API.post('/jira/create-ticket', data);
+export const getJiraTicket = (email) => API.get(`/jira/get-user-ticket?email=${email}`);

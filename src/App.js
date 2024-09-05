@@ -15,6 +15,7 @@ import Item from './components/Item';
 import UserDashboard from './components/UserDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import SalesforceRegister from './components/SalesforceRegister';
+import JiraTickets from './components/JiraTickets';
 function App() {
   const [userData, setUserData] = useState(null)
   const [colorThemeState, setColorThemeState] = useState(() => {
@@ -72,6 +73,7 @@ function App() {
             <Route path="/dashboard" element={<UserDashboard userData={userData} setUserData={setUserData} color_theme_toggle={color_theme_toggle} colorThemeState={colorThemeState} searchValue={searchValue} setSearchValue={setSearchValue} handleSearch={handleSearch} searchResult={searchResult} />} />
             <Route path="/dashboard/admin" element={<AdminDashboard userData={userData} setUserData={setUserData} color_theme_toggle={color_theme_toggle} colorThemeState={colorThemeState} searchValue={searchValue} setSearchValue={setSearchValue} handleSearch={handleSearch} searchResult={searchResult} />} />
             <Route path="/salesforcer-register" element={<SalesforceRegister userData={userData} setUserData={setUserData}/>} />
+            <Route path="/jira-tickets" element={<JiraTickets userData={userData} setUserData={setUserData}/>} />
           </Routes>
         </div>
       </Router>

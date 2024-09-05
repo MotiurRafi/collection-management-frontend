@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { getJiraTicket } from '../api';
+import { useSearchParams } from "react-router-dom";
 
 export default function JiraTickets({ userData }) {
     const [userTickets, setUserTickets] = useState([]);
-
+    const [searchParams] = useSearchParams();
+    const id = searchParams.get("id");
+    
     useEffect(() => {
         if (userData) {
             fetchJiraTickets();

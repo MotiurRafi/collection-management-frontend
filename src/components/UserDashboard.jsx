@@ -112,6 +112,21 @@ export default function UserDashboard({
   const handleTicketToggle = () => {
     setTicketToggle(!ticketToggle);
   };
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'open':
+        return 'text-primary';
+      case 'in progress':
+        return 'text-warning';
+      case 'rejected':
+        return 'text-danger';
+      case 'fixed':
+        return 'text-success';
+      default:
+        return 'text-muted';
+    }
+  };
+
   return (
     <div>
       {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?
@@ -187,42 +202,46 @@ export default function UserDashboard({
                       </div>
                     </div>
                   </div>
-                  <div className="card mb-4">
-                    <div className="card-body">
-                      <div className="row">
-                        <p style={{ width: "auto", cursor: "pointer" }} onClick={handleTicketToggle} className="d-flex justify-content-center">
-                          Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-up' : 'fa-sort-down'}`} style={{margin:"5px 0 0 5px"}}></i>
-                        </p>
-                      </div>
-                      <div className="row pt-3">
-                        <div className="col-sm-9">
-                          <p className="text-muted mb-0 text-capitalize">Summary</p>
+                  {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ? (
+                    <div className="card mb-4">
+                      <div className="card-body">
+                        <div className="row">
+                          <p style={{ width: "auto", cursor: "pointer" }} onClick={handleTicketToggle} className="d-flex justify-content-center">
+                            Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-up' : 'fa-sort-down'}`} style={{ margin: "5px 0 0 5px" }}></i>
+                          </p>
                         </div>
-                        <div className="col-sm-3">
-                          <p className="mb-0 text-capitalize">Status</p>
+                        <div className="row pt-3">
+                          <div className="col-sm-9">
+                            <p className="text-muted mb-0 text-capitalize">Summary</p>
+                          </div>
+                          <div className="col-sm-3">
+                            <p className="mb-0 text-capitalize">Status</p>
+                          </div>
                         </div>
+                        <hr />
+                        {ticketToggle && userTickets.length > 0 && (
+                          userTickets.map((ticket) => (
+                            <React.Fragment key={ticket.link}>
+                              <div className="row pt-3">
+                                <div className="col-sm-9">
+                                  <a className="text-muted mb-0 text-capitalize" href={ticket.link}>{ticket.summary}</a>
+                                </div>
+                                <div className="col-sm-3">
+                                  <p className={`mb-0 text-capitalize ${getStatusColor(ticket.status ? ticket.status.value : 'closed')}`}>
+                                    {ticket.status ? ticket.status.value : 'closed'}
+                                  </p>
+                                </div>
+                              </div>
+                              <hr />
+                            </React.Fragment>
+                          ))
+                        )}
                       </div>
-                      <hr />
-                      {ticketToggle && userTickets.length > 0 && (
-                        userTickets.map((ticket) => (
-                          <React.Fragment key={ticket.link}>
-                            <div className="row pt-3">
-                              <div className="col-sm-9">
-                                <a className="text-muted mb-0 text-capitalize" href={ticket.link}>{ticket.summary}</a>
-                              </div>
-                              <div className="col-sm-3">
-                                <p className="mb-0 text-capitalize">{ticket.status ? ticket.status.value : 'closed'}
-                                </p>
-                              </div>
-                            </div>
-                            <hr />
-                          </React.Fragment>
-                        ))
-                      )}
                     </div>
-                  </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
-
                 <div className="col-lg-8">
                   <div className="row">
                     <div className="col  bg-body-tertiary rounded-3 p-3 mb-4 d-flex justify-content-between align-items-center mx-3">

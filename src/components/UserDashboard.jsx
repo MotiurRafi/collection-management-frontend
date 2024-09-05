@@ -196,7 +196,7 @@ export default function UserDashboard({
                       </div>
                       {ticketToggle && userTickets.length > 0 && (
                         userTickets.map((ticket) => (
-                          <React.Fragment key={ticket.link}>
+                          <>
                             <div className="row">
                               <div className="col-sm-9">
                                 <a className="text-muted mb-0 text-capitalize" href={ticket.link}>{ticket.summary}</a>
@@ -206,7 +206,7 @@ export default function UserDashboard({
                               </div>
                             </div>
                             <hr />
-                          </React.Fragment>
+                          </>
                         ))
                       )}
                     </div>

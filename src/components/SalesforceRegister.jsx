@@ -47,13 +47,55 @@ export default function SalesforceRegister({ userData }) {
   };
 
   return (
-    <div>
-      <form id="salesforceForm" onSubmit={handleSubmit}>
-        <input type="text" name="name" onChange={(e) => setName(e.target.value)} placeholder="Name" required />
-        <input type="email" name="email" value={email} placeholder="Email" required />
-        <input type="text" name="phone" onChange={(e) => setPhone(e.target.value)} placeholder="Phone Number" />
-        <button type="submit">Create Salesforce Account</button>
+    <div className="container mt-4">
+      <form id="salesforceForm" onSubmit={handleSubmit} className="needs-validation" noValidate>
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">Name</label>
+          <input
+            type="text"
+            className="form-control"
+            id="name"
+            name="name"
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            required
+          />
+          <div className="invalid-feedback">
+            Please enter a valid name.
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">Email</label>
+          <input
+            type="email"
+            className="form-control"
+            id="email"
+            name="email"
+            value={email}
+            placeholder="Email"
+            required
+          />
+          <div className="invalid-feedback">
+            Please enter a valid email.
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="phone" className="form-label">Phone Number</label>
+          <input
+            type="text"
+            className="form-control"
+            id="phone"
+            name="phone"
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Phone Number"
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary">Create Salesforce Account</button>
       </form>
     </div>
+
   );
 }

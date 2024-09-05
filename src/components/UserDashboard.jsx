@@ -25,6 +25,8 @@ export default function UserDashboard({
   const id = searchParams.get("id");
   const [user, setUser] = useState(null);
   const [collections, setCollections] = useState([]);
+  const [userTickets, setUserTickets] = useState([]);
+  const [ticketToggle, setTicketToggle] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const limit = 4;
@@ -43,11 +45,13 @@ export default function UserDashboard({
     }
   }, [userData]);
 
-  const fetchJiraTickets = async()=>{
+  const fetchJiraTickets = async () => {
     const email = userData.email
     try {
       const response = await getJiraTicket(email)
-      console.log(response)
+      console.log(response.data)
+      setUserTickets(response.data.tickets)
+
     } catch (error) {
       console.error("error getting user tickets", error)
     }
@@ -105,7 +109,9 @@ export default function UserDashboard({
       console.error('Error fetching Salesforce login URL:', error);
     }
   };
-
+  const handleTicketToggle = () => {
+    setTicketToggle(!ticketToggle);
+  };
   return (
     <div>
       {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?
@@ -149,7 +155,7 @@ export default function UserDashboard({
                         </button>
                       </div>
                       <div className="d-flex justify-content-center mb-2">
-                        {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') &&  (userData.salesforceStatus !== 'true') ?
+                        {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') && (userData.salesforceStatus !== 'true') ?
                           (<button onClick={handleSalesforceLogin} className="btn button-success rounded bg-primary-subtle p-2 btn "> Connect Salesforce</button>) :
                           ''
                         }
@@ -179,6 +185,30 @@ export default function UserDashboard({
                           <p className="text-muted mb-0">{user.email}</p>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div className="card mb-4">
+                    <div className="card-body">
+                      <div className="row">
+                        <button onClick={handleTicketToggle}>
+                          Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-up' : 'fa-sort-down'}`}></i>
+                        </button>
+                      </div>
+                      {ticketToggle && userTickets.length > 0 && (
+                        userTickets.map((ticket) => (
+                          <React.Fragment key={ticket.link}>
+                            <div className="row">
+                              <div className="col-sm-9">
+                                <a className="text-muted mb-0 text-capitalize" href={ticket.link}>{ticket.summary}</a>
+                              </div>
+                              <div className="col-sm-3">
+                                <p className="mb-0 text-capitalize">{ticket.status ? ticket.status : 'closed'}</p>
+                              </div>
+                            </div>
+                            <hr />
+                          </React.Fragment>
+                        ))
+                      )}
                     </div>
                   </div>
                 </div>

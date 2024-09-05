@@ -269,7 +269,7 @@ export default function Item({
           </ul>
         </div>
       </div>
-      <Footer />
+      <Footer userData={userData} />
     </div>
   );
 }

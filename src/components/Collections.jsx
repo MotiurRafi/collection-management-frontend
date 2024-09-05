@@ -80,7 +80,7 @@ export default function Collections({ userData, setUserData, color_theme_toggle,
           </InfiniteScroll>
         </div>
       </section>
-      <Footer />
+      <Footer userData={userData} />
     </div>
   );
 }

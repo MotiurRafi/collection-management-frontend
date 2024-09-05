@@ -41,8 +41,7 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
                 collectionId: collection.id,
                 tags: selectedTags.map(tag => tag.name)
             };
-            const response = await createItem(dataToSend);
-            console.log(response.data);
+            await createItem(dataToSend);
             fetchCollection(urlId);
             closeButtonRef.current.click();
             Object.keys(inputRefs.current).forEach(key => {
@@ -62,9 +61,8 @@ export default function ItemModal({ collection, fetchCollection, urlId }) {
             try {
                 const response = await searchTag(query);
                 setSearchedTags(response.data);
-                console.log(response.data);
             } catch (error) {
-                console.log('Error getting tag:', error);
+                console.error('Error getting tag:', error);
             }
         }
     };

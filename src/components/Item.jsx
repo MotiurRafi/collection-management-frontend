@@ -112,8 +112,7 @@ export default function Item({
   const handleLike = async (event) => {
     event.preventDefault();
     try {
-      const response = await toggleLike(urlId);
-      console.log(response.data);
+      await toggleLike(urlId);
       fetchItem(urlId)
     } catch (error) {
       console.error("Error toggling like:", error);
@@ -126,7 +125,7 @@ export default function Item({
       const response = await getItemComment(urlId)
       setComments(response.data)
     } catch (error) {
-      console.log("Error Fetching Comments", error)
+      console.error("Error Fetching Comments", error)
     }
   }
 
@@ -140,7 +139,7 @@ export default function Item({
       socketRef.current.emit('action', urlId);
       e.target.reset();
     } catch (error) {
-      console.log('Error adding comment', error);
+      console.error('Error adding comment', error);
     }
   };
 
@@ -151,7 +150,7 @@ export default function Item({
       fetchComment(urlId);
       socketRef.current.emit('action', urlId);
     } catch (error) {
-      console.log('Error removing comment', error);
+      console.error('Error removing comment', error);
     }
   };
 
@@ -162,7 +161,7 @@ export default function Item({
       socketRef.current.emit('action', urlId);
       setEditingCommentId(null);
     } catch (error) {
-      console.log('Error updating comment', error);
+      console.error('Error updating comment', error);
     }
   };
 

@@ -146,7 +146,7 @@ export default function ItemUpdateModal({ item, urlId, fetchItem }) {
         const response = await searchTag(query);
         setSearchedTags(response.data);
       } catch (error) {
-        console.log('Error getting tag:', error);
+        console.error('Error getting tag:', error);
       }
     } else {
       setSearchedTags([]);

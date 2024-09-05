@@ -38,11 +38,10 @@ export default function SalesforceRegister({ userData }) {
     event.preventDefault();
     const data = { email, name, phone, accessToken, instanceUrl };
     try {
-      const response = await salesforceRegister(data);
-      console.log("Successfully created Salesforce Account", response);
+      await salesforceRegister(data);
       navigate(`/dashboard?id=${userData.id}&salesforce=success`);
     } catch (error) {
-      console.log("Error creating Salesforce account:", error);
+      console.error("Error creating Salesforce account:", error);
     }
   };
 

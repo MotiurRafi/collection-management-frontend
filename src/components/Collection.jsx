@@ -42,7 +42,6 @@ export default function Collection({
     try {
       const response = await getCollection(id);
       setCollection(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching collection:", error);
     }

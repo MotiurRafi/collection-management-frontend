@@ -43,7 +43,6 @@ export default function JiraTickets({
         const email = userData.email;
         try {
             const response = await getJiraTicket(email);
-            console.log(response.data);
             setUserTickets(response.data.tickets);
         } catch (error) {
             console.error('error getting user tickets', error);

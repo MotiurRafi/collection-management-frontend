@@ -7,12 +7,11 @@ export default function CollectionDeleteModal({ urlId, userId }) {
 
     const removeCollection = async () => {
         try {
-            const response = await deleteCollection(urlId)
-            console.log(response)
+            await deleteCollection(urlId)
             navigate(`/dashboard?id=${userId}`);
             window.location.reload()
         } catch (error) {
-            console.log("error deleting collection", error)
+            console.error("error deleting collection", error)
         }
 
     }

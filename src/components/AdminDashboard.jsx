@@ -26,47 +26,43 @@ export default function AdminDashboard({
             const response = await getAdmins();
             setAdmins(response.data);
         } catch (error) {
-            console.log('Error fetching admins:', error);
+            console.error('Error fetching admins:', error);
         }
     };
 
     const promoteUser = async (userId) => {
         try {
-            const response = await promoteToAdmin(userId);
-            console.log(response.data);
+            await promoteToAdmin(userId);
             fetchAdmins();
         } catch (error) {
-            console.log('Error promoting admin:', error);
+            console.error('Error promoting admin:', error);
         }
     };
 
     const demoteAdmin = async (userId) => {
         try {
-            const response = await demoteToUser(userId);
-            console.log(response.data);
+            await demoteToUser(userId);
             fetchAdmins();
         } catch (error) {
-            console.log('Error demoting admin:', error);
+            console.error('Error demoting admin:', error);
         }
     };
 
     const blockAdmin = async (userId) => {
         try {
-            const response = await adminBlock(userId);
-            console.log(response.data);
+            await adminBlock(userId);
             fetchAdmins();
         } catch (error) {
-            console.log('Error blocking admin:', error);
+            console.error('Error blocking admin:', error);
         }
     };
 
     const unblockAdmin = async (userId) => {
         try {
-            const response = await adminUnblock(userId);
-            console.log(response.data);
+            await adminUnblock(userId);
             fetchAdmins();
         } catch (error) {
-            console.log('Error unblocking admin:', error);
+            console.error('Error unblocking admin:', error);
         }
     };
 
@@ -75,9 +71,8 @@ export default function AdminDashboard({
         try {
             const response = await searchUser(query);
             setSearchedUsers(response.data);
-            console.log(response.data);
         } catch (error) {
-            console.log('Error searching users:', error);
+            console.error('Error searching users:', error);
         }
     };
 

@@ -6,12 +6,11 @@ export default function ItemDeleteModal({urlId, collectionId}) {
 
     const removeItem = async () => {
         try {
-            const response = await deleteItem(urlId)
-            console.log(response)
+            await deleteItem(urlId)
             navigate(`/collections/collection?id=${collectionId}`);
             window.location.reload()
         } catch (error) {
-            console.log("error deleting Item", error)
+            console.error("error deleting Item", error)
         }
 
     }

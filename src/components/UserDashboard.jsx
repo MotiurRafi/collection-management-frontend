@@ -49,7 +49,6 @@ export default function UserDashboard({
     const email = userData.email
     try {
       const response = await getJiraTicket(email)
-      console.log(response.data)
       setUserTickets(response.data.tickets)
 
     } catch (error) {
@@ -62,7 +61,7 @@ export default function UserDashboard({
       const response = await getUser(id);
       setUser(response.data);
     } catch (error) {
-      console.log("Error fetching user", error);
+      console.error("Error fetching user", error);
     }
   }, 200);
 
@@ -102,8 +101,6 @@ export default function UserDashboard({
   const handleSalesforceLogin = async () => {
     try {
       const response = await salesforceAuthUrl();
-      console.log('Salesforce URL:', response.data.url);
-
       window.location.href = response.data.url;
     } catch (error) {
       console.error('Error fetching Salesforce login URL:', error);

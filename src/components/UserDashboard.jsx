@@ -190,18 +190,15 @@ export default function UserDashboard({
                   <div className="card mb-4">
                     <div className="card-body">
                       <div className="row">
-                        {/* Correctly call the toggle handler */}
-                        <button onClick={handleTicketToggle}>
-                          Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-up' : 'fa-sort-down'}`}></i>
-                        </button>
+                        <p onClick={handleTicketToggle} className="d-flex justify-content-center">
+                          Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-up' : 'fa-sort-down'}`} style={{margin:"8px 0 0 8px"}}></i>
+                        </p>
                       </div>
 
-                      {/* Ensure correct conditional rendering and JSX */}
                       {ticketToggle && userTickets.length > 0 && (
                         userTickets.map((ticket) => (
-                          // Ensure there is a single parent element being returned
                           <React.Fragment key={ticket.link}>
-                            <div className="row">
+                            <div className="row pt-3">
                               <div className="col-sm-9">
                                 <a className="text-muted mb-0 text-capitalize" href={ticket.link}>{ticket.summary}</a>
                               </div>

@@ -207,7 +207,7 @@ export default function UserDashboard({
                       <div className="card-body">
                         <div className="row">
                           <p style={{ width: "auto", cursor: "pointer" }} onClick={handleTicketToggle} className="d-flex justify-content-center">
-                            Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-up' : 'fa-sort-down'}`} style={{ margin: "5px 0 0 5px" }}></i>
+                            Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-down' : 'fa-sort-up'}`} style={{ margin: "5px 0 0 5px" }}></i>
                           </p>
                         </div>
                         <div className="row pt-3">

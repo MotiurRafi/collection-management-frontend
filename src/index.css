@@ -1,3 +1,16 @@
 nav .dropdown-toggle::after{
   display: none;
 }
+
+.ticket-link-modal {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 250px;
+  z-index: 1050;
+}
+
+.ticket-link-modal .modal-content {
+  background-color: #ffffff; 
+  border: 1px solid #ddd
+}

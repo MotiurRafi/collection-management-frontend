@@ -4,11 +4,20 @@ import Footer from './Footer';
 import { getJiraTicket } from '../api';
 import { useSearchParams } from "react-router-dom";
 
-export default function JiraTickets({ userData }) {
+export default function JiraTickets({
+    userData,
+    setUserData,
+    color_theme_toggle,
+    colorThemeState,
+    handleSearch,
+    searchValue,
+    setSearchValue,
+    searchResult,
+}) {
     const [userTickets, setUserTickets] = useState([]);
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
-    
+
     useEffect(() => {
         if (userData) {
             fetchJiraTickets();
@@ -43,8 +52,16 @@ export default function JiraTickets({ userData }) {
 
     return (
         <div>
-            <Navbar />
-            <div className="container mt-4">
+            <Navbar
+                color_theme_toggle={color_theme_toggle}
+                colorThemeState={colorThemeState}
+                userData={userData}
+                setUserData={setUserData}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                handleSearch={handleSearch}
+                searchResult={searchResult}
+            />            <div className="container mt-4" style={{ minHeight: "100vh" }}>
                 {userData && (userData.status === 'active' && (userData.role === 'admin' || userData.id === id)) ? (
                     <>
                         <div className="row pt-3">

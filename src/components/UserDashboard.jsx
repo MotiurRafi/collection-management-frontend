@@ -188,7 +188,7 @@ export default function UserDashboard({
                     </div>
                   </div>
                   {userData && (userData.status === 'active' && userData.role === 'admin' || userData.id == id) && userTickets.length > 0 ? (
-                    <div className="card mb-4">
+                    <div>
                       <a href={`/jira-tickets?id=${id}`}>Your Tickets</a>
                     </div>
                   ) : (

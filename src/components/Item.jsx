@@ -171,7 +171,7 @@ export default function Item({
 
   return (
     <div>
-      {userData && (userData.status === 'active') && (userData.id === item.Collection.userId || userData.role === 'admin') ? (
+      {userData && (userData.status === 'active' && userData.role === 'admin' || userData.id === item.Collection.userId) ? (
         <>
           <ItemUpdateModal item={item} urlId={urlId} fetchItem={fetchItem} />
           <ItemDeleteModal urlId={urlId} collectionId={item.collectionId} />
@@ -188,7 +188,7 @@ export default function Item({
         searchResult={searchResult}
       />
       <div className="container-md  position-relative" style={{ minHeight: "100vh" }}>
-        {userData && (userData.status === 'active') && (userData.id === item.Collection.userId || userData.role === 'admin') ? (
+        {userData && (userData.status === 'active' && userData.role === 'admin' || userData.id === item.Collection.userId) ? (
           <div className="position-absolute top-0 end-0 mx-2 mt-2">
             <button className="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updateitemmodal"> <i className="fa-regular fa-pen-to-square"></i></button>
             <button className="btn btn-outline-danger mx-2" data-bs-toggle="modal" data-bs-target="#deleteitemmodal"><i className="fa-regular fa-trash-can"></i></button>

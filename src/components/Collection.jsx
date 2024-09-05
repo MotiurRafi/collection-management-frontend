@@ -98,7 +98,7 @@ export default function Collection({
       />
       {collection && (
         <div className="pb-5" style={{ minHeight: "100vh" }}>
-          {userData && (userData.status === 'active') && (userData.id === collection.userId || userData.role === 'admin') ? (
+          {userData && (userData.status === 'active' && userData.role === 'admin' || userData.id === collection.userId ) ? (
             <>
               <ItemModal collection={collection} fetchCollection={fetchCollection} urlId={id} />
               <CollectionUpdateModal collection={collection} fetchCollection={fetchCollection} urlId={id} />
@@ -111,7 +111,7 @@ export default function Collection({
               className="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center"
               style={{ height: "100%", background: 'rgba(0,0,0,.7)' }}
             >
-              {userData && (userData.status === 'active') && (userData.id === collection.userId || userData.role === 'admin') ? (
+              {userData && (userData.status === 'active' && userData.role === 'admin' || userData.id === collection.userId ) ? (
                 <div className=" position-absolute  top-0 end-0 mx-2 mt-2">
                   <button className="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#updatecollectionmodal"><i className="fa-regular fa-pen-to-square"></i></button>
                   <button className="btn btn-outline-danger mx-2" data-bs-toggle="modal" data-bs-target="#deletecollectionmodal"><i className="fa-regular fa-trash-can"></i></button>
@@ -139,7 +139,7 @@ export default function Collection({
           <div className="container mt-5">
             <div className="bg-body-tertiary rounded-3 p-3 mb-4 d-flex justify-content-between align-items-center">
               <p className="m-0">{t('Items')}</p>
-              {userData && (userData.status === 'active') && (userData.id === collection.userId || userData.role === 'admin') ? (
+              {userData && (userData.status === 'active' && userData.role === 'admin' || userData.id === collection.userId ) ? (
                 <i className="fa-solid fa-plus rounded bg-primary-subtle p-2 btn " data-bs-toggle="modal" data-bs-target="#createitemmodal"></i>
               ) : ('')
               }

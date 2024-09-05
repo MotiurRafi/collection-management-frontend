@@ -24,7 +24,7 @@ export default function TicketModal({ userData, ticketLink, setTicketLink }) {
         const data = { name, email, summary, priority, collection, link };
         try {
             const response = await createJiraTicket(data);
-            setTicketLink(`${process.env.JIRA_INSTANCE}/browse/${response.data.key}`);
+            setTicketLink(`https://motiurrafi601.atlassian.net/browse/${response.data.key}`);
             closeButtonRef.current.click();
         } catch (err) {
             setError('Failed to create the ticket. Please try again.');

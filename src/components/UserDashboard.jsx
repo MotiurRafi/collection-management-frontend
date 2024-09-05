@@ -206,7 +206,8 @@ export default function UserDashboard({
                                 <a className="text-muted mb-0 text-capitalize" href={ticket.link}>{ticket.summary}</a>
                               </div>
                               <div className="col-sm-3">
-                                <p className="mb-0 text-capitalize">{ticket.status ? ticket.status : 'closed'}</p>
+                                <p className="mb-0 text-capitalize">{ticket.status ? ticket.status.value : 'closed'}
+                                </p>
                               </div>
                             </div>
                             <hr />

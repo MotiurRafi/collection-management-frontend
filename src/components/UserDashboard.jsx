@@ -202,7 +202,7 @@ export default function UserDashboard({
                       </div>
                     </div>
                   </div>
-                  {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ? (
+                  {userData && (userData.status === 'active' && userData.role === 'admin' || userData.id == id) ? (
                     <div className="card mb-4">
                       <div className="card-body">
                         <div className="row">

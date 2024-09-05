@@ -129,7 +129,7 @@ export default function UserDashboard({
 
   return (
     <div>
-      {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?
+      {userData && (userData.status === 'active' && userData.role === 'admin') || userData.id == id ?
         (<CollectionModal userId={id} fetchMoreCollections={fetchMoreCollections} setPage={setPage} />) :
         ''
       }
@@ -246,7 +246,7 @@ export default function UserDashboard({
                   <div className="row">
                     <div className="col  bg-body-tertiary rounded-3 p-3 mb-4 d-flex justify-content-between align-items-center mx-3">
                       <p className="m-0">{t('Collections')}</p>
-                      {userData && (userData.status === 'active') && (userData.id == id || userData.role === 'admin') ?
+                      {userData && (userData.status === 'active' && userData.role === 'admin') || userData.id == id ?
                         (<i className="fa-solid fa-plus rounded bg-primary-subtle p-2 btn " data-bs-toggle="modal" data-bs-target="#exampleModal"></i>) :
                         ''
                       }

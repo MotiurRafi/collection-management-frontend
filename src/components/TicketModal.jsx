@@ -24,7 +24,6 @@ export default function TicketModal({ userData, ticketLink, setTicketLink }) {
         const data = { name, email, summary, priority, collection, link };
         try {
             const response = await createJiraTicket(data);
-            alert('Ticket created successfully: ' + response.data.key);
             setTicketLink(`${process.env.JIRA_INSTANCE}/browse/${response.data.key}`);
             closeButtonRef.current.click();
         } catch (err) {

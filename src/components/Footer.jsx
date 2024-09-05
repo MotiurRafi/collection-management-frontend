@@ -10,8 +10,8 @@ export default function Footer({ userData }) {
       setLinkState(true);
       const timer = setTimeout(() => {
         setLinkState(false);
-      }, 3000);
-      return () => clearTimeout(timer); // Cleanup the timer
+      }, 10000);
+      return () => clearTimeout(timer); 
     }
   }, [ticketLink]);
 

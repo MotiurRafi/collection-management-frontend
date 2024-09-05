@@ -109,23 +109,7 @@ export default function UserDashboard({
       console.error('Error fetching Salesforce login URL:', error);
     }
   };
-  const handleTicketToggle = () => {
-    setTicketToggle(!ticketToggle);
-  };
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'open':
-        return 'text-primary';
-      case 'in progress':
-        return 'text-warning';
-      case 'rejected':
-        return 'text-danger';
-      case 'fixed':
-        return 'text-success';
-      default:
-        return 'text-muted';
-    }
-  };
+
 
   return (
     <div>
@@ -202,41 +186,9 @@ export default function UserDashboard({
                       </div>
                     </div>
                   </div>
-                  {userData && (userData.status === 'active' && userData.role === 'admin' || userData.id == id) ? (
+                  {userData && (userData.status === 'active' && userData.role === 'admin' || userData.id == id) && userTickets.length > 0 ? (
                     <div className="card mb-4">
-                      <div className="card-body">
-                        <div className="row">
-                          <p style={{ width: "auto", cursor: "pointer" }} onClick={handleTicketToggle} className="d-flex justify-content-center">
-                            Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-down' : 'fa-sort-up'}`} style={{ margin: "5px 0 0 5px" }}></i>
-                          </p>
-                        </div>
-                        <div className="row pt-3">
-                          <div className="col-sm-9">
-                            <p className="text-muted mb-0 text-capitalize">Summary</p>
-                          </div>
-                          <div className="col-sm-3">
-                            <p className="mb-0 text-capitalize">Status</p>
-                          </div>
-                        </div>
-                        <hr />
-                        {ticketToggle && userTickets.length > 0 && (
-                          userTickets.map((ticket) => (
-                            <React.Fragment key={ticket.link}>
-                              <div className="row pt-3">
-                                <div className="col-sm-9">
-                                  <a className="text-muted mb-0 text-capitalize" href={ticket.link}>{ticket.summary}</a>
-                                </div>
-                                <div className="col-sm-3">
-                                  <p className={`mb-0 text-capitalize ${getStatusColor(ticket.status ? ticket.status.value : 'closed')}`}>
-                                    {ticket.status ? ticket.status.value : 'closed'}
-                                  </p>
-                                </div>
-                              </div>
-                              <hr />
-                            </React.Fragment>
-                          ))
-                        )}
-                      </div>
+                      <a href="/jira-tickets">Your Tickets</a>
                     </div>
                   ) : (
                     ''

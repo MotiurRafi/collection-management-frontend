@@ -190,19 +190,19 @@ export default function UserDashboard({
                   <div className="card mb-4">
                     <div className="card-body">
                       <div className="row">
-                        <p style={{width: "auto"}} onClick={handleTicketToggle} className="d-flex justify-content-center">
-                          Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-up' : 'fa-sort-down'}`}></i>
+                        <p style={{ width: "auto", cursor: "pointer" }} onClick={handleTicketToggle} className="d-flex justify-content-center">
+                          Tickets <i className={`fa-solid ${ticketToggle ? 'fa-sort-up' : 'fa-sort-down'}`} style={{margin:"5px 0 0 5px"}}></i>
                         </p>
                       </div>
                       <div className="row pt-3">
-                              <div className="col-sm-9">
-                                <h5 className="text-muted mb-0 text-capitalize">Summary</h5>
-                              </div>
-                              <div className="col-sm-3">
-                                <h5 className="mb-0 text-capitalize">Status</h5>
-                              </div>
-                            </div>
-                            <hr />
+                        <div className="col-sm-9">
+                          <p className="text-muted mb-0 text-capitalize">Summary</p>
+                        </div>
+                        <div className="col-sm-3">
+                          <p className="mb-0 text-capitalize">Status</p>
+                        </div>
+                      </div>
+                      <hr />
                       {ticketToggle && userTickets.length > 0 && (
                         userTickets.map((ticket) => (
                           <React.Fragment key={ticket.link}>
